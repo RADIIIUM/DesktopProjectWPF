@@ -1,0 +1,105 @@
+﻿<Window x:Class="DesktopProject_V3.WndowOfNew"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DesktopProject_V3"
+        mc:Ignorable="d"
+        Width="550"
+        Height="712"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        MouseDown="Window_MouseLeftButtonDown"
+        >
+    <Window.Background>
+        <LinearGradientBrush>
+            <GradientStop Offset="0.3" Color="#422D52" />
+            <GradientStop Offset="0.7" Color="#754790" />
+        </LinearGradientBrush>
+    </Window.Background>
+    <StackPanel>
+        <StackPanel
+                        Grid.Row="0" 
+                        Grid.Column="1" Orientation="Horizontal" Width="548"     >
+            <Ellipse Width="60" Height="60" HorizontalAlignment="Left" Margin="5" >
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="Images\Icons\Emblema.png" />
+            </Ellipse.Fill>
+            </Ellipse>
+            
+            <Button x:Name="MinWindow"  Margin="370,10,5,10"
+          IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+  ToolTip="MaterialDesignFloatingActionMiniButton" Click="MinWindow_Click">
+                <materialDesign:PackIcon Kind="WindowMinimize" 
+                                         
+                                         materialDesign:Height="35"
+                                         materialDesign:Width="35"/>
+            </Button>
+            <Button x:Name="CloseButton"  HorizontalAlignment="Right"
+                    Margin="0,10,10,10" Click="CloseButton_Click"
+                    
+             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+  ToolTip="MaterialDesignFloatingActionMiniButton">
+                <materialDesign:PackIcon Kind="CloseCircleOutline"
+                                         materialDesign:Height="35"
+                                         materialDesign:Width="35"/>
+            </Button>
+        </StackPanel>
+        <ScrollViewer>
+            <StackPanel>
+                <TextBox Text="Заголовок"
+                           Margin="20,0,0,20"
+                           FontSize="25"
+                           FontFamily="Impact"
+                           Foreground="#eca6ff"
+                         x:Name="Paragraph">
+                    <TextBox.Effect>
+                        <DropShadowEffect Color="#FFFF09FF" ShadowDepth="1"
+                                                      BlurRadius="40"/>
+                    </TextBox.Effect>
+                </TextBox>
+                <Rectangle Width="450"
+                   Height="200"
+                       x:Name="Image"
+                           Fill="Black"
+                       MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
+
+                <TextBlock 
+                    Foreground="White"
+                    Text="Hello"
+                    Margin="30,30,30,0"
+                    FontSize="16"
+                    TextWrapping="Wrap"
+                    x:Name="DescText"/>
+                <TextBox 
+                    Foreground="White"
+                    Margin="30,30,30,0"
+                    TextWrapping="Wrap" Height="122"
+                    x:Name="RedactDesc"/>
+
+                <StackPanel>
+                    <Button Content="Сохранить " Width="244"
+                            Margin="0,30,0,0"
+                            x:Name="Save"
+                            Click="Save_Click"/>
+
+                    <Button Content="Закрепить новость " Width="244"
+                            Margin="0,10,0,0"
+                            x:Name="Fix"
+                            Click="Fix_Click"/>
+
+                    <Button Content="Удалить новость " Width="244"
+                            Margin="0,10,0,0"
+                            x:Name="Delete"
+                            Click="Delete_Click"/>
+                </StackPanel>
+
+
+            </StackPanel>
+        </ScrollViewer>
+    </StackPanel>
+</Window>

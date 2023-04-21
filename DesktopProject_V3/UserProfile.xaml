@@ -1,0 +1,347 @@
+﻿<Window x:Class="DesktopProject_V3.UserProfile"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DesktopProject_V3"
+        mc:Ignorable="d"
+        Title="UserProfile" Height="698" Width="600"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        MouseDown="Window_MouseLeftButtonDown"
+        WindowStartupLocation="CenterScreen">
+    <Window.Background>
+        <LinearGradientBrush>
+            <GradientStop Offset="0.3" Color="#422D52" />
+            <GradientStop Offset="0.7" Color="#754790" />
+        </LinearGradientBrush>
+
+    </Window.Background>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="22*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="57*"/>
+            <RowDefinition Height="647*"/>
+        </Grid.RowDefinitions>
+        <Ellipse Fill="#422D60" 
+        Height="400"
+        Width="400"
+        Margin="-250"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"
+                 />
+
+
+        <StackPanel Background="#422D60" 
+                    Grid.Row ="1"/>
+        <DockPanel Grid.Row="0"
+                    Grid.Column="1"
+                    Background="#422D60" 
+                    >
+
+
+            <StackPanel DockPanel.Dock="Right"
+                        HorizontalAlignment="Right"
+                        Grid.Row="0" 
+                        Grid.Column="1" Orientation="Horizontal" Width="110"
+                        >
+                <Button x:Name="MinWindow"  HorizontalAlignment="Right"
+          IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+  ToolTip="MaterialDesignFloatingActionMiniButton" Click="MinWindow_Click">
+                    <materialDesign:PackIcon Kind="WindowMinimize" 
+                                         
+                                         materialDesign:Height="35"
+                                         materialDesign:Width="35"/>
+                </Button>
+                <Button x:Name="CloseButton"  HorizontalAlignment="Right"
+                   Margin="5,0,0,0" Click="CloseButton_Click"
+                    
+             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+  ToolTip="MaterialDesignFloatingActionMiniButton">
+                    <materialDesign:PackIcon Kind="CloseCircleOutline"
+                                         materialDesign:Height="35"
+                                         materialDesign:Width="35"/>
+                </Button>
+            </StackPanel>
+            <Border Background="#704391" 
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right"
+                    CornerRadius="30"
+                    Margin="5"
+
+                    >
+                <StackPanel Orientation="Horizontal"
+                            Margin="5">
+
+                    <Border Background="#63308a" 
+                    HorizontalAlignment="Right"
+                    CornerRadius="30">
+
+                        <StackPanel>
+                            <TextBlock 
+                               TextAlignment="Center" 
+                               Foreground="#c377fc"
+                               Height="30"
+                               FontSize="20"
+                               Margin="10,5,5,0"
+                                       >
+                                <Run x:Name="BalanceTB">
+                                    2 000 000 000</Run>
+                                <Run> руб</Run>
+                            </TextBlock>
+
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Button
+             Margin="0,0,5,0"
+             Background="Transparent"
+  HorizontalAlignment="Right"
+  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+  ToolTip="MaterialDesignFloatingActionMiniButton">
+                <materialDesign:PackIcon
+                x:Name="BellNotif"
+                Width="30"
+                Height="30"
+                Kind="Bell"
+                Foreground="#704391"  >
+
+                </materialDesign:PackIcon>
+            </Button >
+        </DockPanel>
+
+        <Ellipse Fill="White"
+                 Width="170"
+                 Height="170"
+                 Grid.RowSpan="2"
+                 Grid.ColumnSpan="2"
+                 VerticalAlignment="Top"
+                 HorizontalAlignment="Left"
+                 x:Name="ProfileAva"
+                 Stretch="Fill"/>
+        <ScrollViewer Grid.Column ="1"
+                    Grid.Row="1">
+            <StackPanel Grid.Column ="1"
+                    Grid.Row="1">
+                <Border Background="#422D60"
+                    Width="340"
+                    HorizontalAlignment="Center"
+                    Margin="70,20,0,0"
+                    Padding="8"
+                    CornerRadius="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="283*"/>
+                            <ColumnDefinition Width="31*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text=" а а а а а а а а а а а а а а а а а а а а а а а "
+                           Foreground="White"
+                           FontSize="15"
+                           TextAlignment="Center"
+                           x:Name="Username" Grid.Column="0" 
+                           />
+
+                        <Button
+  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+  ToolTip="MaterialDesignFloatingActionMiniDarkButton"
+                        x:Name="RedactNameButton"
+                        Click="RedactNameButton_Click" Grid.ColumnSpan="2" Margin="292,0,-8,0" >
+                            <materialDesign:PackIcon Kind="Pencil" 
+                                                     />
+                        </Button>
+                    </Grid>
+                </Border>
+
+
+                <Border Background="#422D60"
+                    Width="240"
+                    HorizontalAlignment="Center"
+                    Margin="20,5,0,0"
+                    Padding="5"
+                    CornerRadius="20">
+                    <TextBlock 
+                           Foreground="White"
+                           FontSize="12"
+                           TextAlignment="Left"
+                           >
+                    <Run Text="  Роль :"/>
+                    <Run x:Name="RoleUser_TB"
+                        Text="Пользователь"/>
+                    </TextBlock>
+                </Border>
+
+                <Border Background="#422D60"
+                    Width="300"
+                    HorizontalAlignment="Center"
+                    Margin="70,10,0,0"
+                    Padding="8"
+                    CornerRadius="20">
+                    <TextBlock 
+                           Foreground="White"
+                           FontSize="15"
+                           TextAlignment="Left"
+                           >
+                    <Run Text="  Привилегия :"/>
+                    <Run x:Name="UserStatus_TB"
+                        Text="Classic"/>
+                    </TextBlock>
+                </Border>
+                <StackPanel Grid.Column="1"
+                        Grid.Row="1"
+                        Orientation="Horizontal">
+                    <Border Background="#422D60"
+                    Width="210"
+                    HorizontalAlignment="Left"
+                    Margin="15,30,0,0"
+                    Padding="8"
+                    CornerRadius="20">
+                        <StackPanel>
+                            <TextBlock Text="Доп. данные"
+                               Foreground="White"
+                               TextAlignment="Center"
+                               FontSize="20"/>
+                            <TextBox 
+                               Foreground="White"
+                               TextAlignment="Left"
+                               FontSize="14"
+                               FontWeight="Light"
+                            x:Name="Passport" 
+                                materialDesign:HintAssist.Hint="Паспорт"
+                                />
+                            <TextBox 
+                               Foreground="White"
+                               TextAlignment="Left"
+                               FontSize="14"
+                               FontWeight="Light"
+                            x:Name="Address" 
+                                materialDesign:HintAssist.Hint="Адрес"
+                                />
+                            <TextBox 
+                               Foreground="White"
+                               TextAlignment="Left"
+                               FontSize="14"
+                               FontWeight="Light"
+                            x:Name="Telephone" 
+                                materialDesign:HintAssist.Hint="Телефон"
+                                />
+                            <TextBox 
+                               Foreground="White"
+                               TextAlignment="Left"
+                               FontSize="14"
+                               FontWeight="Light"
+                            x:Name="Email" 
+                                materialDesign:HintAssist.Hint="Email"
+                                />
+                            <TextBlock   
+                              Text="Банковская карта:"
+                               Foreground="White"
+                               TextAlignment="Left"
+                               FontSize="14"
+                               FontWeight="Light" />
+                            <PasswordBox Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
+                                     FontSize="14"
+                                     Password="Hello"
+                                     Foreground="White"
+                                     Padding="10,0,20,0"
+                                     x:Name="BankCardBox"/>
+                        </StackPanel>
+
+                    </Border>
+
+                    <Border Background="#422D60"
+                    Width="270"
+                    HorizontalAlignment="Right"
+                    Margin="20,30,0,0"
+                    Padding="8"
+                    CornerRadius="20">
+                        <StackPanel>
+                            <TextBlock Text="История заказов и пополнений"
+                               Foreground="White"
+                               TextAlignment="Center"
+                               FontSize="16"/>
+                            <ScrollViewer Height="125">
+                                <StackPanel Margin="0,10,0,0">
+                                    <Border Background="#CA91F7"
+                    Width="230"
+                    HorizontalAlignment="Center"
+                    Padding="3"
+                    CornerRadius="10"
+                    Margin="0,0,0,10">
+
+                                        <TextBlock Text=" а а а а а а а а а а а а а а а а а а а а а а а "
+                           Foreground="White"
+                           FontSize="12"
+                           TextAlignment="Center"
+                           />
+                                    </Border>
+
+
+
+
+                                </StackPanel>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                <Border Background="#422D60"
+                    Margin="0,20,0,0"
+                    Width="500"
+                    HorizontalAlignment="Center"
+                    Padding="8"
+                    CornerRadius="20">
+                    <StackPanel>
+                        <TextBlock Text="Новый пароль"
+                               Foreground="White"/>
+                        <PasswordBox Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
+                                 Foreground="White"
+                                 Margin="10"
+                                 x:Name="NewPassword"
+                                 MaxLength="45"/>
+                        <TextBlock Text="Повторить пароль"
+                               Foreground="White"/>
+                        <PasswordBox Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
+                                 Foreground="White"
+                                 Margin="10"
+                                     x:Name="RepeatPass"
+                                     MaxLength="45"/>
+                        <Button Content="Сменить пароль"
+                                x:Name="ChangePass"
+                                Click="ChangePass_Click"></Button>
+                    </StackPanel>
+                </Border>
+                <Border Background="#422D60"
+                    Margin="0,20,0,0"
+                    Width="500"
+                    HorizontalAlignment="Center"
+                    Padding="8"
+                    CornerRadius="20">
+                    <StackPanel>
+                        <TextBox 
+                            x:Name="Description"
+                            materialDesign:HintAssist.Hint="Описание"
+                            materialDesign:HintAssist.Foreground="White"
+                            TextWrapping="Wrap"
+                            MaxLength="1024"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+                    </StackPanel>
+                </Border>
+
+                <Button Content="Сменить аватар"
+                                x:Name="ChangeAvatar"
+                                Click="ChangeAvatar_Click"
+                        Margin="10"></Button>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Window>

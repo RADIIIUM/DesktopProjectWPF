@@ -1,0 +1,121 @@
+﻿<Window x:Class="DesktopProject_V3.RegAcc"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DesktopProject_V3"
+        mc:Ignorable="d"
+        Title="RegAcc" Height="356" Width="800"
+        xmlns:Parallax="clr-namespace:Parallax.WPF.Controls;assembly=Parallax.WPF"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+    Background="Transparent"
+        MouseDown="Drag"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="Ava">
+            <Setter Property="Ellipse.Fill" >
+                <Setter.Value>
+                    <LinearGradientBrush>
+                        <GradientStop Color="Plum" Offset="0.6" />
+                        <GradientStop Color="RoyalBlue" Offset="0.3" />
+                        <GradientStop Color="LightSkyBlue" Offset="0.01" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Cursor="">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="73*"/>
+            <RowDefinition Height="377*"/>
+        </Grid.RowDefinitions>
+        <Parallax:MouseAwareParallaxContainer Grid.RowSpan="2" Grid.ColumnSpan="2" >
+            <Parallax:MouseAwareParallaxContainer.Layers>
+                <Parallax:ParallaxImageLayer ImageSource="Images/Background/Group .png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Parallax:MouseAwareParallaxContainer.Layers>
+        </Parallax:MouseAwareParallaxContainer>
+
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Height="70" Width="95" Margin="305,0,0,0" Grid.Column="1">
+
+            <Button x:Name="MinWindow"  HorizontalAlignment="Right" Margin="0,20,5,10"
+          IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+  ToolTip="MaterialDesignFloatingActionMiniButton" Click="MinWindow_Click">
+                <materialDesign:PackIcon Kind="WindowMinimize" 
+                                         
+                                         materialDesign:Height="35"
+                                         materialDesign:Width="35"/>
+            </Button>
+            <Button x:Name="CloseButton"  HorizontalAlignment="Right"
+                    Margin="0,20,10,10" Click="CloseButton_Click"
+             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+  ToolTip="MaterialDesignFloatingActionMiniButton">
+                <materialDesign:PackIcon Kind="CloseCircleOutline"
+                                         materialDesign:Height="35"
+                                         materialDesign:Width="35"/>
+            </Button>
+        </StackPanel>
+        <Image Source="Images/Icons/RegIco.png" Margin="5"/>
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            
+            <TextBox Padding="10 0" x:Name="LoginBox"
+             HorizontalContentAlignment="Left" Margin="20,10,120,10"
+                materialDesign:HintAssist.Hint="Login" Foreground="White" materialDesign:HintAssist.IsFloating="False"
+                   materialDesign:TextFieldAssist.CharacterCounterVisibility="{Binding Path=IsChecked, ElementName=MaterialDesignOutlinedTextBoxTextCountComboBox, Converter={StaticResource BooleanToVisibilityConverter}}"
+    MaxLength="45" />
+
+            <TextBox Padding="10 0" Name="PassnBox"
+             HorizontalContentAlignment="Left" Margin="20,10,120,10"
+                materialDesign:HintAssist.Hint="Password" Foreground="White" materialDesign:HintAssist.IsFloating="False"
+                   materialDesign:TextFieldAssist.CharacterCounterVisibility="{Binding Path=IsChecked, ElementName=MaterialDesignOutlinedTextBoxTextCountComboBox, Converter={StaticResource BooleanToVisibilityConverter}}"
+    MaxLength="45" />
+
+
+            <TextBox Padding="10 0" Name="RepeatPassBox"
+             HorizontalContentAlignment="Left" Margin="20,10,120,10"
+                materialDesign:HintAssist.Hint="Repeat Password" Foreground="White" materialDesign:HintAssist.IsFloating="False"
+                                  materialDesign:TextFieldAssist.CharacterCounterVisibility="{Binding Path=IsChecked, ElementName=MaterialDesignOutlinedTextBoxTextCountComboBox, Converter={StaticResource BooleanToVisibilityConverter}}"
+    MaxLength="45"  />
+
+            <TextBox Padding="10 0" Name="EmailBox"
+             HorizontalContentAlignment="Left" Margin="20,10,120,10"
+                materialDesign:HintAssist.Hint="Email" Foreground="White" materialDesign:HintAssist.IsFloating="False"
+                                   materialDesign:TextFieldAssist.CharacterCounterVisibility="{Binding Path=IsChecked, ElementName=MaterialDesignOutlinedTextBoxTextCountComboBox, Converter={StaticResource BooleanToVisibilityConverter}}"
+    MaxLength="45" />
+            <Button
+  Width="200" Height="60" Grid.Row="0"
+  Content="Регистрация" x:Name="RegButton" Click="RegButton_Click"
+  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignRaisedButton}"
+  ToolTip="Resource name: MaterialDesignRaisedButton" Margin="75,40,75,23" >
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="RoyalBlue" BlurRadius="10" />
+                </Button.Effect>
+            </Button>
+            <materialDesign:Badged  Grid.Row="1" Margin="10,-20,0,0" HorizontalAlignment="Left"
+  BadgeColorZoneMode="PrimaryDark" Badge="Авторизация">
+
+                <Button Grid.Row="1" x:Name="Autor"
+  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+  Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryDarkButton}" 
+  ToolTip="MaterialDesignFloatingActionMiniSecondaryDarkButton" Click="Autor_Click" >
+                    <materialDesign:PackIcon Kind="Login" />
+
+                </Button>
+            </materialDesign:Badged>
+
+        </StackPanel>
+        <Ellipse x:Name="Avatar"  Grid.Column="1" Grid.Row="1" Margin="30" Style="{StaticResource Ava}"  MouseLeftButtonDown="Ellipse_MouseLeftButtonDown">
+
+            
+        </Ellipse>
+    </Grid>
+</Window>
