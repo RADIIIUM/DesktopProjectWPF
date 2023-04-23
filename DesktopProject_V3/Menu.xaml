@@ -691,7 +691,58 @@
                                         </TextBlock.Effect>
                                     </TextBlock>
                                     <TextBlock Text="Подробнее >"
+                                               x:Name="Computers"
+                                               MouseLeftButtonDown="Details_MouseLeftButtonDown"
                                                FontSize="16"
+                                               Foreground="Red"
+                                               TextAlignment="Center"
+                                               FontWeight="DemiBold"
+                                               >
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="Red" ShadowDepth="1"
+                                                      BlurRadius="20"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                </StackPanel>
+
+                            </Grid>
+
+                            <Grid HorizontalAlignment="Center"
+                                            Width="400"
+                                            Height="400"
+                                            Margin="20"
+                                            >
+
+                                <Parallax:MouseAwareParallaxContainer >
+                                    <Parallax:MouseAwareParallaxContainer.Layers>
+                                        <Parallax:ParallaxImageLayer ImageSource="Images/Background/Group .png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Parallax:MouseAwareParallaxContainer.Layers>
+                                </Parallax:MouseAwareParallaxContainer>
+                                <StackPanel Orientation="Vertical">
+                                    <Image Source="Images/ForShop/GameNout.png"
+                                       Margin="50,50,50,0">
+                                        <Image.Effect>
+                                            <DropShadowEffect Color="Purple"
+                                                          ShadowDepth="1"
+                                                          BlurRadius="200"/>
+                                        </Image.Effect>
+                                    </Image>
+
+                                    <TextBlock
+                            Foreground="#eca6ff"
+                            Margin="10"
+                            FontSize="40"
+                            TextAlignment="Center"
+                            FontFamily="IMPACT">
+                        <Run>Ноутбуки</Run>
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="#FFFF09FF" ShadowDepth="1"
+                                                      BlurRadius="40"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                    <TextBlock Text="Подробнее >"
+                                               FontSize="16"
+                                               MouseLeftButtonDown="Details_MouseLeftButtonDown"
                                                Foreground="Red"
                                                TextAlignment="Center"
                                                FontWeight="DemiBold">
@@ -704,10 +755,10 @@
 
                             </Grid>
 
-                            <Grid HorizontalAlignment="Right"
+                            <Grid HorizontalAlignment="Center"
                                             Width="400"
                                             Height="400"
-                                             Margin="20"
+                                            Margin="20"
                                             >
 
                                 <Parallax:MouseAwareParallaxContainer >
@@ -715,15 +766,47 @@
                                         <Parallax:ParallaxImageLayer ImageSource="Images/Background/Group .png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Parallax:MouseAwareParallaxContainer.Layers>
                                 </Parallax:MouseAwareParallaxContainer>
+                                <StackPanel Orientation="Vertical">
+                                    <Image Source="Images/ForShop/Acsesuari.png"
+                                       Margin="50,50,50,0">
+                                        <Image.Effect>
+                                            <DropShadowEffect Color="Purple"
+                                                          ShadowDepth="1"
+                                                          BlurRadius="200"/>
+                                        </Image.Effect>
+                                    </Image>
 
-                                <Image />
+                                    <TextBlock
+                            Foreground="#eca6ff"
+                            Margin="10"
+                            FontSize="40"
+                            TextAlignment="Center"
+                            FontFamily="IMPACT">
+                        <Run>Аксессуары</Run>
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="#FFFF09FF" ShadowDepth="1"
+                                                      BlurRadius="40"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                    <TextBlock Text="Подробнее >"
+                                               FontSize="16"
+                                               Foreground="Red"
+                                               MouseLeftButtonDown="Details_MouseLeftButtonDown"
+                                               TextAlignment="Center"
+                                               FontWeight="DemiBold">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="Red" ShadowDepth="1"
+                                                      BlurRadius="20"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                </StackPanel>
 
                             </Grid>
 
-                            <Grid HorizontalAlignment="Right"
+                            <Grid HorizontalAlignment="Center"
                                             Width="400"
                                             Height="400"
-                                             Margin="20"
+                                            Margin="20"
                                             >
 
                                 <Parallax:MouseAwareParallaxContainer >
@@ -731,24 +814,40 @@
                                         <Parallax:ParallaxImageLayer ImageSource="Images/Background/Group .png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Parallax:MouseAwareParallaxContainer.Layers>
                                 </Parallax:MouseAwareParallaxContainer>
+                                <StackPanel Orientation="Vertical">
+                                    <Image Source="Images/ForShop/complect.png"
+                                       Margin="50,50,50,0">
+                                        <Image.Effect>
+                                            <DropShadowEffect Color="Purple"
+                                                          ShadowDepth="1"
+                                                          BlurRadius="200"/>
+                                        </Image.Effect>
+                                    </Image>
 
-                                <Image />
-
-                            </Grid>
-
-                            <Grid HorizontalAlignment="Right"
-                                            Width="400"
-                                            Height="400"
-                                             Margin="20"
-                                            >
-
-                                <Parallax:MouseAwareParallaxContainer >
-                                    <Parallax:MouseAwareParallaxContainer.Layers>
-                                        <Parallax:ParallaxImageLayer ImageSource="Images/Background/Group .png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Parallax:MouseAwareParallaxContainer.Layers>
-                                </Parallax:MouseAwareParallaxContainer>
-
-                                <Image />
+                                    <TextBlock
+                            Foreground="#eca6ff"
+                            Margin="10"
+                            FontSize="40"
+                            TextAlignment="Center"
+                            FontFamily="IMPACT">
+                        <Run>Комплектующие</Run>
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="#FFFF09FF" ShadowDepth="1"
+                                                      BlurRadius="40"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                    <TextBlock Text="Подробнее >"
+                                               FontSize="16"
+                                               Foreground="Red"
+                                               MouseLeftButtonDown="Details_MouseLeftButtonDown"
+                                               TextAlignment="Center"
+                                               FontWeight="DemiBold">
+                                        <TextBlock.Effect>
+                                            <DropShadowEffect Color="Red" ShadowDepth="1"
+                                                      BlurRadius="20"/>
+                                        </TextBlock.Effect>
+                                    </TextBlock>
+                                </StackPanel>
 
                             </Grid>
 

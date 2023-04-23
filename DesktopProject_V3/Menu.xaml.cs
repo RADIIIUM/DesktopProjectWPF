@@ -233,5 +233,12 @@ namespace DesktopProject_V3
                 MessageBox.Show("Возникла какая-то ошибка");
             }
         }
+
+        private void Details_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            WindowOfProducts wp = new WindowOfProducts();
+            this.Close();
+            wp.ShowDialog();
+        }
     }
 }

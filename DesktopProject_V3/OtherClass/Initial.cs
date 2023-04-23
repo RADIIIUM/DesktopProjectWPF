@@ -13,6 +13,8 @@ namespace DesktopProject_V3
 
         public static int NumberOfNews {get;set;}
 
+        public static string NameOfCategoryOfProduct { get; set; }
+
 
     }
 }
