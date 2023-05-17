@@ -8,6 +8,15 @@ namespace DesktopProject_V3.DataBaseClass
 
     public partial class Types_Products
     {
+        public Types_Products() 
+        { 
+
+        }
+        public Types_Products(int idt, int idp)
+        {
+            this.ID_Product = idp;
+            this.ID_Type = idt;
+        }
         [Key]
         public int ID_TP { get; set; }
 

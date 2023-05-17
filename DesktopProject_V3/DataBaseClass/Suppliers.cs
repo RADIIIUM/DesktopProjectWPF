@@ -8,6 +8,15 @@ namespace DesktopProject_V3.DataBaseClass
 
     public partial class Suppliers
     {
+        public Suppliers()
+        {
+
+        }
+        public Suppliers(string name, int id)
+        {
+            this.NameOfSupplier = name;
+            this.ID_Product = id;
+        }
         [Key]
         public int ID_Supplier { get; set; }
 

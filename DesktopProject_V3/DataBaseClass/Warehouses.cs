@@ -8,6 +8,12 @@ namespace DesktopProject_V3.DataBaseClass
 
     public partial class Warehouses
     {
+        public Warehouses() { }
+        public Warehouses(int id, int cout)
+        {
+            this.ID_Product = id;
+            this.CountOfProduct = cout;
+        }
         [Key]
         public int ID_Cell { get; set; }
 

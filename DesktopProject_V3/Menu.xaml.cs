@@ -236,6 +236,8 @@ namespace DesktopProject_V3
 
         private void Details_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            TextBlock tx = (TextBlock)sender;
+            Initial.NameOfCategoryOfProduct = tx.Name;
             WindowOfProducts wp = new WindowOfProducts();
             this.Close();
             wp.ShowDialog();

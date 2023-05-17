@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,7 +23,7 @@ namespace DesktopProject_V3
     /// 
     public class Prod
     {
-        public Prod(int id, string name, string desc, string spec, int cena, string akcia, ImageBrush img) 
+        public Prod(int id, string name, string desc, string spec, int cena, string akcia, ImageBrush img, int count, string type) 
         {
             this.ID = id;
             this.Name = name;
@@ -30,6 +31,9 @@ namespace DesktopProject_V3
             this.Specification = spec;
             this.Cena = cena;
             this.Akcia = akcia;
+            this.Count = count;
+            this.im = img;
+            this.Type = type;
         }
 
         public Prod() { }
@@ -41,7 +45,11 @@ namespace DesktopProject_V3
         public int Cena { get; set; }
         public string Akcia { get; set; }
 
-        public ImageBrush img { get; set; }
+        public string Type { get; set; }
+
+        public int Count { get; set;  }
+
+        public ImageBrush im { get; set; }
     }
     public partial class WindowOfProducts : Window
     {
@@ -49,10 +57,12 @@ namespace DesktopProject_V3
         public WindowOfProducts()
         {
             InitializeComponent();
-            using(Model1 db = new Model1())
+            ProductList.Items.Clear();
+            Avatar av = new Avatar();
+            using (Model1 db = new Model1())
             {
+                
                 NP = new ObservableCollection<Prod>();
-                Avatar av = new Avatar();
                 foreach (var user in db.Users)
                 {
                     if (user.LoginOfUser == Initial.login)
@@ -75,17 +85,40 @@ namespace DesktopProject_V3
                                     {
                                         if(prod.ID_Product ==  tp.ID_Product)
                                         {
-                                            if(prod.Discount > 0)
+                                            if (prod.Discount > 0)
                                             {
-                                                int discount = prod.Discount ?? 0;
-                                                int cena = (prod.Price * discount) / 100;
-                                                
-                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct, prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)));
+                                                int cena = prod.Discount ?? 0;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                int count;
+                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType; 
+                                                try
+                                                {
+                                                   count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                }
+                                                catch (System.InvalidOperationException ex)
+                                                {
+                                                    count = 0;
+                                                }
+                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                             else
                                             {
-                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct, prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)));
+                                                int cena = prod.Price;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                int count;
+                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                try
+                                                {
+                                                    count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                }
+                                                catch(System.InvalidOperationException ex)
+                                                {
+                                                    count = 0;
+                                                }
+                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                    prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()),tip);
                                                 NP.Add(p);
                                             }
                                         }
@@ -93,6 +126,7 @@ namespace DesktopProject_V3
                                 }
                             }
                         }
+                        
                         ProductList.ItemsSource = NP;
                         break;
 
@@ -110,15 +144,38 @@ namespace DesktopProject_V3
                                         {
                                             if (prod.Discount > 0)
                                             {
-                                                int discount = prod.Discount ?? 0;
-                                                int cena = (prod.Price * discount) / 100;
-
-                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct, prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)));
+                                                int cena = prod.Discount ?? 0;
+                                                int count;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                try
+                                                {
+                                                    count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                }
+                                                catch (System.InvalidOperationException ex)
+                                                {
+                                                    count = 0;
+                                                }
+                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                             else
                                             {
-                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct, prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)));
+                                                int cena = prod.Price;
+                                                int count;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                try
+                                                {
+                                                    count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                }
+                                                catch (System.InvalidOperationException ex)
+                                                {
+                                                    count = 0;
+                                                }
+                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                    prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                         }
@@ -126,6 +183,7 @@ namespace DesktopProject_V3
                                 }
                             }
                         }
+                        
                         ProductList.ItemsSource = NP;
                         break;
 
@@ -143,15 +201,38 @@ namespace DesktopProject_V3
                                         {
                                             if (prod.Discount > 0)
                                             {
-                                                int discount = prod.Discount ?? 0;
-                                                int cena = (prod.Price * discount) / 100;
-
-                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct, prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)));
+                                                int cena = prod.Discount ?? 0;
+                                                int count;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                try
+                                                {
+                                                    count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                }
+                                                catch (System.InvalidOperationException ex)
+                                                {
+                                                    count = 0;
+                                                }
+                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                             else
                                             {
-                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct, prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)));
+                                                int cena = prod.Price;
+                                                int count;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                try
+                                                {
+                                                    count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                }
+                                                catch (System.InvalidOperationException ex)
+                                                {
+                                                    count = 0;
+                                                }
+                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                    prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                         }
@@ -159,6 +240,7 @@ namespace DesktopProject_V3
                                 }
                             }
                         }
+                        
                         ProductList.ItemsSource = NP;
                         break;
 
@@ -176,15 +258,38 @@ namespace DesktopProject_V3
                                         {
                                             if (prod.Discount > 0)
                                             {
-                                                int discount = prod.Discount ?? 0;
-                                                int cena = (prod.Price * discount) / 100;
-
-                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct, prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)));
+                                                int cena = prod.Discount ?? 0;
+                                                int count;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                try
+                                                {
+                                                    count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                }
+                                                catch (System.InvalidOperationException ex)
+                                                {
+                                                    count = 0;
+                                                }
+                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                             else
                                             {
-                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct, prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)));
+                                                int cena = prod.Price;
+                                                int count;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                try
+                                                {
+                                                    count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                }
+                                                catch (System.InvalidOperationException ex)
+                                                {
+                                                    count = 0;
+                                                }
+                                                Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                    prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                         }
@@ -192,6 +297,7 @@ namespace DesktopProject_V3
                                 }
                             }
                         }
+                        
                         ProductList.ItemsSource = NP;
                         break;
 
@@ -233,8 +339,21 @@ namespace DesktopProject_V3
 
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
+            Initial.IDProduct = -1;
             Product pr = new Product();
             pr.ShowDialog();
+        }
+
+        private void ProductList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+                Prod p = (Prod)ProductList.SelectedItem;
+                Model1 db = new Model1();
+                int id = db.Products.First(x => x.ID_Product == p.ID).ID_Product;
+                Initial.IDProduct = id;
+                Product pr = new Product();
+                pr.ShowDialog();
+
         }
     }
 }

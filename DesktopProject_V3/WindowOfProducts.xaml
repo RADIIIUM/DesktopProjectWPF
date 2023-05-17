@@ -29,6 +29,14 @@
                     Background="Transparent" Grid.ColumnSpan="2"
                     >
 
+            <Button Content="Добавить товар"
+                    Margin="100,0,0,0"
+                    x:Name="AddProduct"
+                    Background="Red"
+                    Click="AddProduct_Click"
+                    Width="300"
+                    Height="50"/>
+
 
 
             <StackPanel DockPanel.Dock="Right"
@@ -152,59 +160,57 @@
             </Ellipse>
         </WrapPanel>
 
-        <Border Grid.Row="1" 
-                BorderBrush="Purple"
-                Panel.ZIndex="1"
-                >
-            <Border.Effect>
+
+        <WrapPanel HorizontalAlignment="Left"
+                       Panel.ZIndex="1"
+                       Grid.Row="1">
+            <WrapPanel.Effect>
                 <DropShadowEffect ShadowDepth="15"
                                   Color="#ff80e3"
                                   BlurRadius="40"
                                   />
-            </Border.Effect>
-            <WrapPanel HorizontalAlignment="Left"
-                       Panel.ZIndex="1">
-                <Expander Foreground="White"
+            </WrapPanel.Effect>
+            <Expander Foreground="White"
     ExpandDirection="Right" Grid.Row="1" 
             Background="#704391" Height="537" 
                           Panel.ZIndex="1"
                       >
-                    <Expander.Header>
-                        <TextBlock
+                <Expander.Header>
+                    <TextBlock
         RenderTransformOrigin=".5,.5"
         Text="Настройки поиска">
-                            <TextBlock.LayoutTransform>
-                                <RotateTransform
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform
             Angle="90" />
-                            </TextBlock.LayoutTransform>
-                        </TextBlock>
-                    </Expander.Header>
-                    <ScrollViewer>
-                        <WrapPanel
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </Expander.Header>
+                <ScrollViewer>
+                    <WrapPanel
       Margin="8,24,16,24"
       Orientation="Vertical"
                         Panel.ZIndex="1"
       TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                            <TextBox materialDesign:HintAssist.Hint="Поиск" Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        <TextBox materialDesign:HintAssist.Hint="Поиск" Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      Foreground="White" Background="#1f0224" Width="235"/>
-                            <TextBlock Text="Цена (руб)"
+                        <TextBlock Text="Цена (руб)"
                                        FontSize="20"
                                        FontStretch="UltraCondensed"
                                        TextAlignment="Left"
                                        Margin="0,7,0,7"/>
-                            <StackPanel Orientation="Horizontal"
+                        <StackPanel Orientation="Horizontal"
                                         >
-                                <StackPanel 
+                            <StackPanel 
                                         Width="74" Height="327"
                                         Margin="5,20,0,0">
-                                    <TextBlock Text="Max"
+                                <TextBlock Text="Max"
                                            TextAlignment="Center"
                                                FontWeight="Bold"/>
-                                    <TextBox Background="#af6feb" Width="72"
+                                <TextBox Background="#af6feb" Width="72"
                                        Margin="0,10,0,10" Height="29"
                                        TextAlignment="Center"
                                        Foreground="White" />
-                                    <Slider
+                                <Slider
   Maximum="{Binding DiscreteVertical.Maximum}"
   Minimum="0"
   Orientation="Vertical"
@@ -212,41 +218,44 @@
   TickFrequency="{Binding DiscreteVertical.TickFrequency}"
   TickPlacement="BottomRight"
   Value="0" Height="244" Width="24" />
-                                </StackPanel>
-
-                                <StackPanel Width="74" Height="327"
-                                        Margin="30,20,0,0">
-                                    <TextBlock Text="Min"
-                                           TextAlignment="Center"
-                                               FontWeight="Bold"/>
-                                    <TextBox Background="#af6feb" Width="72"
-                                       Margin="0,10,0,10" Height="29"
-                                       TextAlignment="Center"
-                                       Foreground="White" />
-
-                                    <Slider
-
-  Maximum="{Binding DiscreteVertical.Maximum}"
-  Minimum="0"
-  Orientation="Vertical"
-  Style="{StaticResource MaterialDesignDiscreteSlider}"
-  TickFrequency="{Binding DiscreteVertical.TickFrequency}"
-  TickPlacement="BottomRight"
-  Value="0" Height="244" Width="24" />
-
-                                </StackPanel>
                             </StackPanel>
 
-                            <CheckBox Content="Наличие скидки"
+                            <StackPanel Width="74" Height="327"
+                                        Margin="30,20,0,0">
+                                <TextBlock Text="Min"
+                                           TextAlignment="Center"
+                                               FontWeight="Bold"/>
+                                <TextBox Background="#af6feb" Width="72"
+                                       Margin="0,10,0,10" Height="29"
+                                       TextAlignment="Center"
+                                       Foreground="White" />
+
+                                <Slider
+
+  Maximum="{Binding DiscreteVertical.Maximum}"
+  Minimum="0"
+  Orientation="Vertical"
+  Style="{StaticResource MaterialDesignDiscreteSlider}"
+  TickFrequency="{Binding DiscreteVertical.TickFrequency}"
+  TickPlacement="BottomRight"
+  Value="0" Height="244" Width="24" />
+
+                            </StackPanel>
+                        </StackPanel>
+
+                        <CheckBox Content="Наличие скидки"
                                       Margin="0,5,0,5"/>
-                            <CheckBox Content="Для особых пользователей" 
+                        <CheckBox Content="Для особых пользователей" 
                                       Margin="0,5,0,5"/>
-                            <ComboBox  Margin="0,5,0,5"></ComboBox>
-                        </WrapPanel>
-                    </ScrollViewer>
-                </Expander>
-            </WrapPanel>
-        </Border>
+                        <ComboBox x:Name="PrivilegiaOfUserCombo"  Margin="0,5,0,5"></ComboBox>
+
+                        <TextBlock Text="Тип техники"/>
+
+                        <ComboBox x:Name="TypeOfTechnikCombo"  Margin="0,5,0,5"></ComboBox>
+                    </WrapPanel>
+                </ScrollViewer>
+            </Expander>
+        </WrapPanel>
         <ScrollViewer Grid.Row="1"
                    Margin="50,0,0,0"
                       Panel.ZIndex="0">
@@ -255,15 +264,118 @@
                        Panel.ZIndex="0">
 
 
+                <ListBox 
+                         Margin="40,0,0,0" x:Name="ProductList" Height="662" Width="842"
+                    SelectionChanged ="ProductList_SelectionChanged"
+                    Panel.ZIndex="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
 
-                <ListBox Panel.ZIndex="0">
-                    <ListBoxItem Panel.ZIndex="0">
-                        <DataTemplate >
-                            <StackPanel Panel.ZIndex="0">
-                                <TextBlock Text="Hello"/>
-                            </StackPanel>
+
+                            <Border 
+                BorderThickness="6"
+                CornerRadius="40"
+                Width="400"
+                Height="260"
+                          
+                                    HorizontalAlignment="Left">
+                            <Border.Background>
+                                <LinearGradientBrush>
+                                    <GradientStop Color="#9e2882" Offset="0.5" />
+                                    <GradientStop Color="#e437ed" Offset="0.5" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.BorderBrush>
+                                <LinearGradientBrush>
+                                    <GradientStop Color="#fc0000" Offset="0.5" />
+                                    <GradientStop Color="#a80000" Offset="0.5" />
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <WrapPanel 
+                                        Orientation="Horizontal"
+                                Panel.ZIndex="0">
+
+                                <Rectangle Height="130"
+                          Fill="{Binding Path=im}"
+                          Stretch="Fill"
+                       Width="130"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Margin="20,20,0,0"/>
+
+                                <StackPanel 
+                            Margin="10"
+                    Width="200">
+                                        <TextBlock x:Name="Id"
+                                                    Visibility="Collapsed"
+                                                   />
+                                        <TextBlock 
+                                                   x:Name="NameOfProduct"
+                               FontSize="17"
+                               FontWeight="Light"
+                               Foreground="White"
+                               FontFamily="Impact"
+                               Margin="0,10,0,5"
+                               TextDecorations="Underline"
+                               Text="{Binding Path=Name}" />
+                                    <TextBlock 
+                               FontWeight="Bold"
+                                        Text="Описание"
+                               Foreground="White"
+                               FontStyle="Oblique"
+                               TextDecorations="OverLine"/>
+                                    <TextBlock Text="{Binding Path=Description}" 
+                                                    x:Name="DescOfProduct"
+                               MaxHeight="75"
+                               Foreground="White"
+                                                              Height="60"/>
+                                    <TextBlock
+                               FontWeight="Bold"
+                               Foreground="White"
+                               FontStyle="Oblique" Text="Характеристика"
+                               TextDecorations="OverLine"/>
+                                    <TextBlock Text="{Binding Path=Specification}" 
+                               x:Name="SpecOfProduct"
+                               Foreground="White"
+
+                                                              MaxHeight="100"
+                                                              Height="85"/>
+                                </StackPanel>
+                                <StackPanel Margin="20,-80,0,0" Width="135">
+                                        <TextBlock
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               ><Run Text="Цена: "/>
+                                            <Run Text="{Binding Path=Cena}" 
+                               x:Name="PriceOfProduct"/>
+                                            <Run Text=" руб."/>
+                                        </TextBlock>
+                                    <TextBlock Text="{Binding Path=Akcia}" 
+                               Foreground="PaleVioletRed"
+                                                   x:Name="AkciaOfProduct"
+                                                   TextDecorations="Strikethrough"/>
+                                        <TextBlock TextWrapping="Wrap"
+                        Margin="0,5,0,0"
+                               Foreground="White">
+                        <Run Text="Тип товара: "/>
+                        <Run x:Name="TypeProdText" 
+                             Text="{Binding Path=Type}" />
+                                        </TextBlock>
+                                        <TextBlock TextWrapping="Wrap"
+                        Margin="0,5,0,0"
+                               Foreground="White">
+                        <Run Text="Кол-во на складе: "/>
+                        <Run x:Name="CountOfProducts" 
+                             Text="{Binding Path=Count}" />
+                                    </TextBlock>
+                                </StackPanel>
+
+
+                            </WrapPanel>
+                        </Border>
                         </DataTemplate>
-                    </ListBoxItem>
+                    </ListBox.ItemTemplate>
                 </ListBox>
 
             </WrapPanel>

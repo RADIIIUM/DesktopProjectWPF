@@ -15,6 +15,8 @@ namespace DesktopProject_V3
 
         public static string NameOfCategoryOfProduct { get; set; }
 
+        public static int IDProduct { get;set; }
+
 
     }
 }

@@ -5,6 +5,7 @@ namespace DesktopProject_V3.DataBaseClass
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Windows.Media.Animation;
 
     public partial class Products
     {
@@ -14,6 +15,17 @@ namespace DesktopProject_V3.DataBaseClass
             Suppliers = new HashSet<Suppliers>();
             Types_Products = new HashSet<Types_Products>();
             Warehouses = new HashSet<Warehouses>();
+        }
+
+        public Products(string name, byte[] avatar, int price, string desc, int disc, string spec)
+        {
+            this.NameOfProduct = name;
+            this.AvatarOfProduct = avatar;
+            this.Price = price;
+            this.DescriptionOfProduct = desc;
+            this.Specifications = spec;
+            this.Discount = disc;
+
         }
 
         [Key]

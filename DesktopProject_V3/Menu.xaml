@@ -741,6 +741,7 @@
                                         </TextBlock.Effect>
                                     </TextBlock>
                                     <TextBlock Text="Подробнее >"
+                                               x:Name="Notebook"
                                                FontSize="16"
                                                MouseLeftButtonDown="Details_MouseLeftButtonDown"
                                                Foreground="Red"
@@ -790,6 +791,7 @@
                                     </TextBlock>
                                     <TextBlock Text="Подробнее >"
                                                FontSize="16"
+                                               x:Name="Accessory"
                                                Foreground="Red"
                                                MouseLeftButtonDown="Details_MouseLeftButtonDown"
                                                TextAlignment="Center"
@@ -841,6 +843,7 @@
                                                Foreground="Red"
                                                MouseLeftButtonDown="Details_MouseLeftButtonDown"
                                                TextAlignment="Center"
+                                               x:Name="Complect"
                                                FontWeight="DemiBold">
                                         <TextBlock.Effect>
                                             <DropShadowEffect Color="Red" ShadowDepth="1"
