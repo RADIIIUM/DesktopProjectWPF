@@ -168,6 +168,7 @@ namespace DesktopProject_V3
         private void ProfileIcon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             UserProfile up = new UserProfile();
+            up.Owner = this;
             up.ShowDialog();
         }
 
@@ -193,10 +194,8 @@ namespace DesktopProject_V3
             {
                 foreach(var n in db.News)
                 {
-                    if(n.ID_New == int.Parse(g.Name.ToString().Replace("Name", "")))
-                        
+                    if(n.ID_New == int.Parse(g.Name.ToString().Replace("Name", "")))     
                     {
-                        
                         Initial.NumberOfNews = n.ID_New;
                         WndowOfNew wn = new WndowOfNew();
                         wn.ShowDialog();

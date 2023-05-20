@@ -197,11 +197,10 @@
                     </TextBlock>
                 </Border>
                 <StackPanel Grid.Column="1"
-                        Grid.Row="1"
+                        Grid.RowSpan="2"
                         Orientation="Horizontal">
                     <Border Background="#422D60"
-                    Width="210"
-                    HorizontalAlignment="Left"
+                    Width="480"
                     Margin="15,30,0,0"
                     Padding="8"
                     CornerRadius="20">
@@ -257,41 +256,6 @@
                         </StackPanel>
 
                     </Border>
-
-                    <Border Background="#422D60"
-                    Width="270"
-                    HorizontalAlignment="Right"
-                    Margin="20,30,0,0"
-                    Padding="8"
-                    CornerRadius="20">
-                        <StackPanel>
-                            <TextBlock Text="История заказов и пополнений"
-                               Foreground="White"
-                               TextAlignment="Center"
-                               FontSize="16"/>
-                            <ScrollViewer Height="125">
-                                <StackPanel Margin="0,10,0,0">
-                                    <Border Background="#CA91F7"
-                    Width="230"
-                    HorizontalAlignment="Center"
-                    Padding="3"
-                    CornerRadius="10"
-                    Margin="0,0,0,10">
-
-                                        <TextBlock Text=" а а а а а а а а а а а а а а а а а а а а а а а "
-                           Foreground="White"
-                           FontSize="12"
-                           TextAlignment="Center"
-                           />
-                                    </Border>
-
-
-
-
-                                </StackPanel>
-                            </ScrollViewer>
-                        </StackPanel>
-                    </Border>
                 </StackPanel>
                 <Border Background="#422D60"
                     Margin="0,20,0,0"
@@ -339,6 +303,20 @@
                 <Button Content="Сменить аватар"
                                 x:Name="ChangeAvatar"
                                 Click="ChangeAvatar_Click"
+                        Margin="10"></Button>
+
+
+                <Button Content="Выйти с аккаунта"
+                                x:Name="LeaveAccount"
+                                Background="DarkRed"
+                                Click="LeaveAccount_Click"
+                        Margin="10"></Button>
+
+
+                <Button Content="Удалить профиль"
+                                x:Name="DeleteProfile"
+                        Background="DarkRed"
+                                Click="DeleteProfile_Click"
                         Margin="10"></Button>
             </StackPanel>
         </ScrollViewer>

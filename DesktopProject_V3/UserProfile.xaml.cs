@@ -1,4 +1,5 @@
 ﻿using DesktopProject_V3.DataBaseClass;
+using DevExpress.Internal.WinApi.Windows.UI.Notifications;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -177,5 +178,33 @@ namespace DesktopProject_V3
             }
         }
 
+        private void LeaveAccount_Click(object sender, RoutedEventArgs e)
+        {
+            Initial.login = null;
+            Autorization aut = new Autorization();
+            this.Close();
+            this.Owner.Close();
+            aut.Show();
+        }
+
+        private void DeleteProfile_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Вы уверены в своем решении? \n Восстановить аккаунт будет невозможно!", "Вы уверены?", MessageBoxButton.YesNo);
+            if(result == MessageBoxResult.Yes)
+            {
+                using(Model1 db = new Model1())
+                {
+                    Users u = db.Users.FirstOrDefault(x => x.LoginOfUser == Initial.login);
+                    db.Users.Remove(u);
+                    MessageBox.Show($"Пользователь {Initial.login} был удален");
+                    db.SaveChanges();
+                    Initial.login = null;
+                    Autorization aut = new Autorization();
+                    this.Close();
+                    this.Owner.Close();
+                    aut.Show();
+                }
+            }
+        }
     }
 }

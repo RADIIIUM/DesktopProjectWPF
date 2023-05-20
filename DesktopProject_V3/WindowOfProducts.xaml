@@ -191,8 +191,10 @@
       Orientation="Vertical"
                         Panel.ZIndex="1"
       TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                        <TextBox materialDesign:HintAssist.Hint="Поиск" Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                     Foreground="White" Background="#1f0224" Width="235"/>
+                        <TextBox materialDesign:HintAssist.Hint="Поиск"
+                                 x:Name="SearchBox" Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     Foreground="White" Background="#1f0224" Width="235"
+                                 TextChanged="SearchBox_TextChanged"/>
                         <TextBlock Text="Цена (руб)"
                                        FontSize="20"
                                        FontStretch="UltraCondensed"
@@ -209,15 +211,18 @@
                                 <TextBox Background="#af6feb" Width="72"
                                        Margin="0,10,0,10" Height="29"
                                        TextAlignment="Center"
-                                       Foreground="White" />
+                                       Foreground="White"
+                                         x:Name="MaxText"
+                                         TextChanged="MaxMin_TextChanged"
+                                       Text="{Binding ElementName=MaxPriceSlider, Path=Value}"/>
                                 <Slider
-  Maximum="{Binding DiscreteVertical.Maximum}"
-  Minimum="0"
   Orientation="Vertical"
   Style="{StaticResource MaterialDesignDiscreteSlider}"
   TickFrequency="{Binding DiscreteVertical.TickFrequency}"
   TickPlacement="BottomRight"
-  Value="0" Height="244" Width="24" />
+  Value="{Binding ElementName=MaxText, Path=Text}" Height="244" Width="24"
+                                    x:Name="MaxPriceSlider"
+                                    />
                             </StackPanel>
 
                             <StackPanel Width="74" Height="327"
@@ -228,30 +233,25 @@
                                 <TextBox Background="#af6feb" Width="72"
                                        Margin="0,10,0,10" Height="29"
                                        TextAlignment="Center"
-                                       Foreground="White" />
+                                       Foreground="White"
+                                         x:Name="MinText"
+                                         TextChanged="MaxMin_TextChanged"
+                                         Text="{Binding ElementName=MinPriceSlider, Path=Value}"/>
 
                                 <Slider
-
-  Maximum="{Binding DiscreteVertical.Maximum}"
-  Minimum="0"
   Orientation="Vertical"
   Style="{StaticResource MaterialDesignDiscreteSlider}"
   TickFrequency="{Binding DiscreteVertical.TickFrequency}"
   TickPlacement="BottomRight"
-  Value="0" Height="244" Width="24" />
+  Value="{Binding ElementName=MinText, Path=Text}" Height="244" Width="24"
+                                    x:Name="MinPriceSlider"/>
 
                             </StackPanel>
                         </StackPanel>
 
-                        <CheckBox Content="Наличие скидки"
-                                      Margin="0,5,0,5"/>
-                        <CheckBox Content="Для особых пользователей" 
-                                      Margin="0,5,0,5"/>
-                        <ComboBox x:Name="PrivilegiaOfUserCombo"  Margin="0,5,0,5"></ComboBox>
+                        <TextBlock Text="Тип товара"/>
 
-                        <TextBlock Text="Тип техники"/>
-
-                        <ComboBox x:Name="TypeOfTechnikCombo"  Margin="0,5,0,5"></ComboBox>
+                        <ComboBox x:Name="TypeOfTechnikCombo" SelectionChanged="TypeOfTechnikCombo_SelectionChanged"  Margin="0,5,0,5"></ComboBox>
                     </WrapPanel>
                 </ScrollViewer>
             </Expander>
@@ -317,7 +317,8 @@
                                FontFamily="Impact"
                                Margin="0,10,0,5"
                                TextDecorations="Underline"
-                               Text="{Binding Path=Name}" />
+                               Text="{Binding Path=Name}" 
+                                            TextWrapping="Wrap"/>
                                     <TextBlock 
                                FontWeight="Bold"
                                         Text="Описание"
@@ -328,6 +329,7 @@
                                                     x:Name="DescOfProduct"
                                MaxHeight="75"
                                Foreground="White"
+                                               TextWrapping="Wrap"
                                                               Height="60"/>
                                     <TextBlock
                                FontWeight="Bold"
@@ -337,24 +339,26 @@
                                     <TextBlock Text="{Binding Path=Specification}" 
                                x:Name="SpecOfProduct"
                                Foreground="White"
+                                               TextWrapping="Wrap"
 
                                                               MaxHeight="100"
                                                               Height="85"/>
                                 </StackPanel>
                                 <StackPanel Margin="20,-80,0,0" Width="135">
                                         <TextBlock
-                               FontSize="16"
+                               FontSize="15"
                                FontWeight="Bold"
                                Foreground="White"
-                               ><Run Text="Цена: "/>
+                               ><Run Text="Цена:"/>
                                             <Run Text="{Binding Path=Cena}" 
                                x:Name="PriceOfProduct"/>
-                                            <Run Text=" руб."/>
+                                            <Run Text="руб."/>
                                         </TextBlock>
                                     <TextBlock Text="{Binding Path=Akcia}" 
-                               Foreground="PaleVioletRed"
+                               Foreground="Red"
                                                    x:Name="AkciaOfProduct"
-                                                   TextDecorations="Strikethrough"/>
+                                                   TextDecorations="Strikethrough"
+                                               FontSize="14"/>
                                         <TextBlock TextWrapping="Wrap"
                         Margin="0,5,0,0"
                                Foreground="White">

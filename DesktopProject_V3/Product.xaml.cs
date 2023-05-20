@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -21,9 +23,32 @@ namespace DesktopProject_V3
     /// <summary>
     /// Логика взаимодействия для Product.xaml
     /// </summary>
+    /// 
+    public class Commnt
+    {
+        public Commnt() { }
+
+        public Commnt(string Login, string User, string Role, string Desc, int Rating, ImageBrush avatar) 
+        { 
+            this.avatar = avatar;
+            this.UserRole = Role;
+            this.UserName = User;
+            this.Desc = Desc;
+            this.Rating = Rating;
+            this.Login = Login;
+        }
+        public ImageBrush avatar { get; set; }
+
+        public string Login { get; set; }
+        public string UserName { get; set; }
+        public string UserRole { get; set; }
+        public string Desc { get; set; }
+        public int Rating { get; set; }
+    }
     public partial class Product : Window
     {
         public static byte[] bt { get; set; }
+        public ObservableCollection<Commnt> NP { get; set; }
         public Product()
         {
             InitializeComponent();
@@ -32,85 +57,55 @@ namespace DesktopProject_V3
                 string role = db.Roles.First(x => x.LoginOfUsers == Initial.login).NameOfRole;
                 if ((role.Replace(" ", "") == "Администратор" || role.Replace(" ", "") == "Модератор"))
                 {
-                    DeleteBtn.Visibility = Visibility.Visible;
                     SaveBtn.Visibility = Visibility.Visible;
-                    ComboStackPanel.Visibility = Visibility.Visible;
                     NameOfProduct.IsReadOnly = false;
                     DescriptionOfProduct.IsReadOnly = false;
                     SpecificOfProduct.IsReadOnly = false;
                     PriceOfProduct.IsReadOnly = false;
                     AkciaText.IsReadOnly = false;
-                    CountInWare.IsReadOnly = false;
-                    NumSup.IsReadOnly = false;
-                    
-                    
+
                 }
                 else
                 {
-                    DeleteBtn.Visibility = Visibility.Collapsed;
                     SaveBtn.Visibility = Visibility.Collapsed;
-                    ComboStackPanel.Visibility = Visibility.Collapsed;
                     NameOfProduct.IsReadOnly = true;
                     DescriptionOfProduct.IsReadOnly = true;
                     SpecificOfProduct.IsReadOnly = true;
                     PriceOfProduct.IsReadOnly = true;
                     AkciaText.IsReadOnly = true;
+
+                }
+                if(role.Replace(" ", "") == "Администратор")
+                {
+                    DeleteBtn.Visibility = Visibility.Visible;
+                    NumSup.Visibility = Visibility.Visible;
+                    CountInWare.Visibility = Visibility.Visible;
+                    CountInWare.IsReadOnly = false;
+                    NumSup.IsReadOnly = false;
+                    ComboType.Visibility = Visibility.Visible;
+                    CountInWare.IsReadOnly = false;
+                    NumSup.IsReadOnly = false;
+                    ComboType.Visibility = Visibility.Visible;
+                    ComboStackPanel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    DeleteBtn.Visibility = Visibility.Collapsed;
+                    NumSup.Visibility = Visibility.Collapsed;
+                    CountInWare.Visibility = Visibility.Collapsed;
                     CountInWare.IsReadOnly = true;
                     NumSup.IsReadOnly = true;
-
+                    ComboType.Visibility = Visibility.Collapsed;
+                    ComboStackPanel.Visibility = Visibility.Collapsed;
                 }
-                    if (Initial.IDProduct != -1)
-                {
 
-                var pr = db.Products.Where(x => x.ID_Product == Initial.IDProduct);
-                    int idtp = db.Types_Products.First(x => x.ID_Product == Initial.IDProduct).ID_Product ?? 0;
-                    try
-                    {
-                        var t = db.Types_Products.First(x => x.ID_Product == Initial.IDProduct);
-                        var w = db.Warehouses.First(x => x.ID_Product == Initial.IDProduct);
-                        var s = db.Suppliers.First(x => x.ID_Product == Initial.IDProduct);
-                        NumSup.Text = s.NameOfSupplier;
-                        CountInWare.Text = w.CountOfProduct.ToString();
-                    }
-                    catch(System.InvalidOperationException ex)
-                    {
-                        NumSup.Visibility = Visibility.Collapsed;
-                        CountInWare.Visibility = Visibility.Collapsed;
-
-                        
-                    }
-                    foreach (var p in pr)
-                {
-                    NameOfProduct.Text = p.NameOfProduct;
-                        DescriptionOfProduct.Text += p.DescriptionOfProduct; 
-                        SpecificOfProduct.Text = p.Specifications;
-                        Product.bt = p.AvatarOfProduct;
-                        ComboType.SelectedIndex = ComboType.Items.IndexOf(db.TypesOfProducts.First(x=>x.ID_Type == idtp).NameOfType);
-                        TypeProductText.Text = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
-                        if (p.Discount != 0 || p.Discount != null)
-                    {
-                        PriceOfProduct.Text = p.Discount.ToString();
-                        AkciaText.Text = p.Price.ToString();
-                    }
-                    else
-                    {
-                        PriceOfProduct.Text = p.Price.ToString();
-                        AkciaText.Visibility = Visibility.Collapsed;
-                        Akcia.Visibility = Visibility.Collapsed;
-                    }
-                        Avatar av = new Avatar();
-                        this.ProductIcon.Fill = new ImageBrush(av.ToImage(p.AvatarOfProduct));
-                        break;
-                    }
-
-                }
                 switch (Initial.NameOfCategoryOfProduct)
                 {
                     case "Computers":
                         var type = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_CMP") >= 0).Select(x => x);
                         foreach (var t in type)
                         {
-                                ComboType.Items.Add(t.NameOfType);
+                            ComboType.Items.Add(t.NameOfType);
                         }
                         break;
 
@@ -121,7 +116,7 @@ namespace DesktopProject_V3
                             ComboType.Items.Add(t.NameOfType);
                         }
                         break;
-                    
+
 
                     case "Accessory":
                         var type2 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_ACS") >= 0).Select(x => x);
@@ -141,6 +136,66 @@ namespace DesktopProject_V3
 
                     default:
                         break;
+
+                }
+
+                if (Initial.IDProduct != -1)
+                {
+                    var pr = db.Products.Where(x => x.ID_Product == Initial.IDProduct);
+                    int idtp = db.Types_Products.First(x => x.ID_Product == Initial.IDProduct).ID_Type ?? 0;
+                    try
+                    {
+                        var w = db.Warehouses.First(x => x.ID_Product == Initial.IDProduct);
+                        var s = db.Suppliers.First(x => x.ID_Product == Initial.IDProduct);
+                        NumSup.Text = s.NameOfSupplier ?? "0";
+                        CountInWare.Text = w.CountOfProduct.ToString() ?? "Не найден";
+                    }
+                    catch(System.InvalidOperationException ex)
+                    {
+                        NumSup.Text = "0";
+                        CountInWare.Text = "Не найден";
+                    }
+                    foreach (var p in pr)
+                {
+                    NameOfProduct.Text = p.NameOfProduct;
+                        DescriptionOfProduct.Text += p.DescriptionOfProduct; 
+                        SpecificOfProduct.Text = p.Specifications;
+                        Product.bt = p.AvatarOfProduct;
+                        ComboType.SelectedIndex = (ComboType.Items.IndexOf(db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType));
+                        TypeProductText.Text = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                        if (p.Discount != 0)
+                    {
+                        PriceOfProduct.Text = p.Discount.ToString();
+                        AkciaText.Text = p.Price.ToString();
+                            if ((role.Replace(" ", "") == "Администратор" || role.Replace(" ", "") == "Модератор"))
+                            {
+                                AkciaText.Visibility = Visibility.Visible;
+                                Akcia.Visibility = Visibility.Visible;
+                            }
+                            else
+                            {
+                                AkciaText.Visibility = Visibility.Collapsed;
+                                Akcia.Visibility = Visibility.Collapsed;
+                            }
+                        }
+                    else
+                    {
+                        PriceOfProduct.Text = p.Price.ToString();
+                            if ((role.Replace(" ", "") == "Администратор" || role.Replace(" ", "") == "Модератор"))
+                            {
+                                AkciaText.Visibility = Visibility.Visible;
+                                Akcia.Visibility = Visibility.Visible;
+                            }
+                            else
+                            {
+                                AkciaText.Visibility = Visibility.Collapsed;
+                                Akcia.Visibility = Visibility.Collapsed;
+                            }
+                        }
+                        Avatar av = new Avatar();
+                        this.ProductIcon.Fill = new ImageBrush(av.ToImage(p.AvatarOfProduct));
+                        break;
+                    }
 
                 }
 
@@ -164,7 +219,7 @@ namespace DesktopProject_V3
         }
 
 
-        private void DeleteBtn_Click(object sender, RoutedEventArgs e)
+        private async void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
             if(Initial.IDProduct != -1)
             {
@@ -172,7 +227,7 @@ namespace DesktopProject_V3
                 Products pr = db.Products.First(x => x.ID_Product == Initial.IDProduct);
                 db.Products.Remove(pr);
                 MessageBox.Show("Продукт удален!");
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 this.Close();
             }
             else
@@ -212,9 +267,9 @@ namespace DesktopProject_V3
             }
         }
 
-        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        private async void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(NumSup.Text) || string.IsNullOrEmpty(CountInWare.Text)) MessageBox.Show("Поставщик и кол-во товара не должны быть пустыми");
+          if (string.IsNullOrEmpty(NumSup.Text) || string.IsNullOrEmpty(CountInWare.Text)) MessageBox.Show("Поставщик и кол-во товара не должны быть пустыми");
             if (string.IsNullOrEmpty(NameOfProduct.Text) ||
     string.IsNullOrEmpty(PriceOfProduct.Text) ||
     string.IsNullOrEmpty(DescriptionOfProduct.Text) ||
@@ -229,6 +284,7 @@ namespace DesktopProject_V3
             {
                 using(Model1 db = new Model1())
                 {
+                    try { 
                     if (db.Products.First(x => x.ID_Product == Initial.IDProduct) != null)
                     {
                         try
@@ -239,30 +295,29 @@ namespace DesktopProject_V3
                             var s = db.Suppliers.First(x => x.ID_Product == Initial.IDProduct);
                             prd.NameOfProduct = NameOfProduct.Text;
                             prd.AvatarOfProduct = Product.bt;
-                            prd.Price = int.Parse(PriceOfProduct.Text);
+                            prd.Price = int.Parse(PriceOfProduct.Text.Replace(" ", ""));
                             int type = db.TypesOfProducts.First(x => x.NameOfType == ComboType.Text).ID_Type;
                             t.ID_Type = type;
                             w.CountOfProduct = int.Parse(CountInWare.Text);
                             s.NameOfSupplier = NumSup.Text;
-                            prd.Discount = int.Parse(Akcia.Text);
+                            prd.Discount = int.Parse(AkciaText.Text.Replace(" ", ""));
                             prd.Specifications = SpecificOfProduct.Text;
                             prd.DescriptionOfProduct = DescriptionOfProduct.Text;
                             MessageBox.Show("Все сохранилось");
                             this.Close();
-                            db.SaveChanges();
+                            await db.SaveChangesAsync();
                         }
                         catch
                         {
                             MessageBox.Show("Ввели неверный формат текста!\nПерепроверьте данные");
                         }
+                      }
                     }
-                    else
+                    catch
                     {
+                            try
+                            {
 
-
-                        try
-                        {
-                            
                                 Products prd = new Products(NameOfProduct.Text, Product.bt, int.Parse(PriceOfProduct.Text),
                                                                 DescriptionOfProduct.Text, 0, SpecificOfProduct.Text);
                                 db.Products.Add(prd);
@@ -274,14 +329,13 @@ namespace DesktopProject_V3
                                 db.Suppliers.Add(s);
                                 db.Types_Products.Add(tp);
                                 MessageBox.Show("Все сохранено");
-                            
-                            db.SaveChanges();
+                            await db.SaveChangesAsync();
                             this.Close();
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Возникла ошибка! Проверьте все ли поля заполнены");
-                        }
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Возникла ошибка! Проверьте все ли поля заполнены");
+                            }
                     }
                 }
             }

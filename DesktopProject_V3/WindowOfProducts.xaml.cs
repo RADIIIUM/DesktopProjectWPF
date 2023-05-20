@@ -54,15 +54,24 @@ namespace DesktopProject_V3
     public partial class WindowOfProducts : Window
     {
         public ObservableCollection<Prod> NP { get; set; }
+        public string ctg {get;set;}
         public WindowOfProducts()
         {
             InitializeComponent();
             ProductList.Items.Clear();
-            Avatar av = new Avatar();
+            Avatar avat = new Avatar();
             using (Model1 db = new Model1())
             {
-                
-                NP = new ObservableCollection<Prod>();
+                string role = db.Roles.First(x => x.LoginOfUsers == Initial.login).NameOfRole;
+                if ((role.Replace(" ", "") == "Администратор"))
+                {
+                    AddProduct.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    AddProduct.Visibility = Visibility.Collapsed;
+                }
+                    NP = new ObservableCollection<Prod>();
                 foreach (var user in db.Users)
                 {
                     if (user.LoginOfUser == Initial.login)
@@ -71,11 +80,20 @@ namespace DesktopProject_V3
                         BalanceUser.Text = (user.Balance == null ? 0 : user.Balance).ToString();
                     }
                 }
-                switch(Initial.NameOfCategoryOfProduct)
+                int max;
+                int min;
+                switch (Initial.NameOfCategoryOfProduct)
                 {
                     case "Computers":
                         var type = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_CMP") >= 0).Select(x => x.ID_Type).ToList();
-                        foreach(var t in type)
+                        var typesearch = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_CMP") >= 0).Select(x => x);
+                        this.ctg = "_CMP";
+                        foreach (var t in typesearch)
+                        {
+                            TypeOfTechnikCombo.Items.Add(t.NameOfType.Split('_')[0]);
+                        }
+
+                        foreach (var t in type)
                         {
                             foreach (var tp in db.Types_Products)
                             {
@@ -85,12 +103,13 @@ namespace DesktopProject_V3
                                     {
                                         if(prod.ID_Product ==  tp.ID_Product)
                                         {
+
                                             if (prod.Discount > 0)
                                             {
                                                 int cena = prod.Discount ?? 0;
-                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
                                                 int count;
-                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType; 
+                                                string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0]; 
                                                 try
                                                 {
                                                    count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
@@ -100,15 +119,15 @@ namespace DesktopProject_V3
                                                     count = 0;
                                                 }
                                                 Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
-                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    prod.Specifications, prod.Price,cena.ToString() , new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                             else
                                             {
                                                 int cena = prod.Price;
-                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
                                                 int count;
-                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
                                                 try
                                                 {
                                                     count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
@@ -118,7 +137,7 @@ namespace DesktopProject_V3
                                                     count = 0;
                                                 }
                                                 Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
-                                                    prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()),tip);
+                                                    prod.Specifications, prod.Price, "", new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()),tip);
                                                 NP.Add(p);
                                             }
                                         }
@@ -126,12 +145,39 @@ namespace DesktopProject_V3
                                 }
                             }
                         }
-                        
+                        try
+                        {
+                            max = NP.Select(x => x.Cena).Max();
+                            min = NP.Select(x => x.Cena).Min();
+                            MaxPriceSlider.Maximum = max;
+                            MaxPriceSlider.Minimum = min;
+                            MinPriceSlider.Maximum = max;
+                            MinPriceSlider.Minimum = min;
+                            MaxPriceSlider.Value = max;
+                            MinPriceSlider.Value = min;
+                        }
+                        catch
+                        {
+                            max = 10;
+                            min = 0;
+                            MaxPriceSlider.Maximum = max;
+                            MaxPriceSlider.Minimum = min;
+                            MinPriceSlider.Maximum = max;
+                            MinPriceSlider.Minimum = min;
+                            MaxPriceSlider.Value = max;
+                            MinPriceSlider.Value = min;
+                        }
                         ProductList.ItemsSource = NP;
                         break;
 
                     case "Notebook":
                         var type1 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_NTB") >= 0).Select(x => x.ID_Type).ToList();
+                        var typesearch1 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_NTB") >= 0).Select(x => x);
+                        this.ctg = "_NTB";
+                        foreach (var t in typesearch1)
+                        {
+                            TypeOfTechnikCombo.Items.Add(t.NameOfType.Split('_')[0]);
+                        }
                         foreach (var t in type1)
                         {
                             foreach (var tp in db.Types_Products)
@@ -146,8 +192,8 @@ namespace DesktopProject_V3
                                             {
                                                 int cena = prod.Discount ?? 0;
                                                 int count;
-                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
-                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
                                                 try
                                                 {
                                                     count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
@@ -157,15 +203,15 @@ namespace DesktopProject_V3
                                                     count = 0;
                                                 }
                                                 Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
-                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                             else
                                             {
                                                 int cena = prod.Price;
                                                 int count;
-                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
-                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
                                                 try
                                                 {
                                                     count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
@@ -175,7 +221,7 @@ namespace DesktopProject_V3
                                                     count = 0;
                                                 }
                                                 Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
-                                                    prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    prod.Specifications, prod.Price, "", new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                         }
@@ -183,12 +229,39 @@ namespace DesktopProject_V3
                                 }
                             }
                         }
-                        
+                        try
+                        {
+                            max = NP.Select(x => x.Cena).Max();
+                            min = NP.Select(x => x.Cena).Min();
+                            MaxPriceSlider.Maximum = max;
+                            MaxPriceSlider.Minimum = min;
+                            MinPriceSlider.Maximum = max;
+                            MinPriceSlider.Minimum = min;
+                            MaxPriceSlider.Value = max;
+                            MinPriceSlider.Value = min;
+                        }
+                        catch
+                        {
+                            max = 10;
+                            min = 0;
+                            MaxPriceSlider.Maximum = max;
+                            MaxPriceSlider.Minimum = min;
+                            MinPriceSlider.Maximum = max;
+                            MinPriceSlider.Minimum = min;
+                            MaxPriceSlider.Value = max;
+                            MinPriceSlider.Value = min;
+                        }
                         ProductList.ItemsSource = NP;
                         break;
 
                     case "Accessory":
                         var type2 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_ACS") >= 0).Select(x => x.ID_Type).ToList();
+                        var typesearch2 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_ACS") >= 0).Select(x => x);
+                        this.ctg = "_ACS";
+                        foreach (var t in typesearch2)
+                        {
+                            TypeOfTechnikCombo.Items.Add(t.NameOfType.Split('_')[0]);
+                        }
                         foreach (var t in type2)
                         {
                             foreach (var tp in db.Types_Products)
@@ -203,8 +276,8 @@ namespace DesktopProject_V3
                                             {
                                                 int cena = prod.Discount ?? 0;
                                                 int count;
-                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
-                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
                                                 try
                                                 {
                                                     count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
@@ -214,15 +287,15 @@ namespace DesktopProject_V3
                                                     count = 0;
                                                 }
                                                 Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
-                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                             else
                                             {
                                                 int cena = prod.Price;
                                                 int count;
-                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
-                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
                                                 try
                                                 {
                                                     count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
@@ -232,7 +305,7 @@ namespace DesktopProject_V3
                                                     count = 0;
                                                 }
                                                 Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
-                                                    prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    prod.Specifications, prod.Price, "", new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                         }
@@ -240,12 +313,39 @@ namespace DesktopProject_V3
                                 }
                             }
                         }
-                        
+                        try
+                        {
+                            max = NP.Select(x => x.Cena).Max();
+                            min = NP.Select(x => x.Cena).Min();
+                            MaxPriceSlider.Maximum = max;
+                            MaxPriceSlider.Minimum = min;
+                            MinPriceSlider.Maximum = max;
+                            MinPriceSlider.Minimum = min;
+                            MaxPriceSlider.Value = max;
+                            MinPriceSlider.Value = min;
+                        }
+                        catch
+                        {
+                            max = 10;
+                            min = 0;
+                            MaxPriceSlider.Maximum = max;
+                            MaxPriceSlider.Minimum = min;
+                            MinPriceSlider.Maximum = max;
+                            MinPriceSlider.Minimum = min;
+                            MaxPriceSlider.Value = max;
+                            MinPriceSlider.Value = min;
+                        }
                         ProductList.ItemsSource = NP;
                         break;
 
                     case "Complect":
                         var type3 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_CKT") >= 0).Select(x => x.ID_Type).ToList();
+                        var typesearch3 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_CKT") >= 0).Select(x => x);
+                        this.ctg = "_CKT";
+                        foreach (var t in typesearch3)
+                        {
+                            TypeOfTechnikCombo.Items.Add(t.NameOfType.Split('_')[0]);
+                        }
                         foreach (var t in type3)
                         {
                             foreach (var tp in db.Types_Products)
@@ -260,8 +360,8 @@ namespace DesktopProject_V3
                                             {
                                                 int cena = prod.Discount ?? 0;
                                                 int count;
-                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
-                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
                                                 try
                                                 {
                                                     count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
@@ -271,15 +371,15 @@ namespace DesktopProject_V3
                                                     count = 0;
                                                 }
                                                 Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
-                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                             else
                                             {
                                                 int cena = prod.Price;
                                                 int count;
-                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Product ?? 0;
-                                                string tip = db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType;
+                                                int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
                                                 try
                                                 {
                                                     count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
@@ -289,7 +389,7 @@ namespace DesktopProject_V3
                                                     count = 0;
                                                 }
                                                 Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
-                                                    prod.Specifications, prod.Price, "", new ImageBrush(av.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    prod.Specifications, prod.Price, "", new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
                                                 NP.Add(p);
                                             }
                                         }
@@ -297,7 +397,28 @@ namespace DesktopProject_V3
                                 }
                             }
                         }
-                        
+                        try
+                        {
+                            max = NP.Select(x => x.Cena).Max();
+                            min = NP.Select(x => x.Cena).Min();
+                            MaxPriceSlider.Maximum = max;
+                            MaxPriceSlider.Minimum = min;
+                            MinPriceSlider.Maximum = max;
+                            MinPriceSlider.Minimum = min;
+                            MaxPriceSlider.Value = max;
+                            MinPriceSlider.Value = min;
+                        }
+                        catch
+                        {
+                            max = 10;
+                            min = 0;
+                            MaxPriceSlider.Maximum = max;
+                            MaxPriceSlider.Minimum = min;
+                            MinPriceSlider.Maximum = max;
+                            MinPriceSlider.Minimum = min;
+                            MaxPriceSlider.Value = max;
+                            MinPriceSlider.Value = min;
+                        }
                         ProductList.ItemsSource = NP;
                         break;
 
@@ -305,6 +426,10 @@ namespace DesktopProject_V3
                         break;
 
                 }
+                TypeOfTechnikCombo.Items.Add("Все товары");
+                ImageBrush av = new ImageBrush();
+                av.ImageSource = Avatar.ava;
+                ProfileIcon.Fill = av;
             }
         }
 
@@ -316,6 +441,7 @@ namespace DesktopProject_V3
         private void ProfileIcon_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             UserProfile up = new UserProfile();
+            up.Owner = this;
             up.ShowDialog();
         }
 
@@ -354,6 +480,338 @@ namespace DesktopProject_V3
                 Product pr = new Product();
                 pr.ShowDialog();
 
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                ProductList.ItemsSource = NP.Where(x => (x.Cena <= int.Parse(MaxText.Text)) && (x.Cena >= int.Parse(MinText.Text)) && (x.Name.ToLower().IndexOf(SearchBox.Text.ToLower()) >= 0)).ToList();
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        private void TypeOfTechnikCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            NP.Clear();
+            Avatar avat = new Avatar();
+            using (Model1 db = new Model1())
+            {
+                string typeofCombo = TypeOfTechnikCombo.SelectedItem.ToString()
+                    + this.ctg;
+                if (TypeOfTechnikCombo.SelectedItem.ToString() != "Все товары")
+                {
+                    var tmp = (db.TypesOfProducts.FirstOrDefault(y => y.NameOfType.IndexOf(typeofCombo) >= 0).ID_Type);
+                    var idproducts = db.Types_Products.Where(x => x.ID_Type == tmp).Select(x => x.ID_Product).ToList();
+                    foreach (var pr in idproducts)
+                    {
+                        foreach (var produt in db.Products)
+                        {
+                            if (produt.ID_Product == pr)
+                            {
+                                if (produt.Discount > 0)
+                                {
+                                    int cena = produt.Discount ?? 0;
+                                    int idtp = db.Types_Products.First(x => x.ID_Product == produt.ID_Product).ID_Type ?? 0;
+                                    int count;
+                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                    try
+                                    {
+                                        count = db.Warehouses.First(x => x.ID_Product == produt.ID_Product).CountOfProduct ?? 0;
+                                    }
+                                    catch (System.InvalidOperationException ex)
+                                    {
+                                        count = 0;
+                                    }
+                                    Prod p = new Prod(produt.ID_Product, produt.NameOfProduct, produt.DescriptionOfProduct,
+                                        produt.Specifications, produt.Price, cena.ToString(), new ImageBrush(avat.ToImage(produt.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                    NP.Add(p);
+                                }
+                                else
+                                {
+                                    int cena = produt.Price;
+                                    int idtp = db.Types_Products.First(x => x.ID_Product == produt.ID_Product).ID_Type ?? 0;
+                                    int count;
+                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                    try
+                                    {
+                                        count = db.Warehouses.First(x => x.ID_Product == produt.ID_Product).CountOfProduct ?? 0;
+                                    }
+                                    catch (System.InvalidOperationException ex)
+                                    {
+                                        count = 0;
+                                    }
+                                    Prod p = new Prod(produt.ID_Product, produt.NameOfProduct, produt.DescriptionOfProduct,
+                                        produt.Specifications, produt.Price, "", new ImageBrush(avat.ToImage(produt.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                    NP.Add(p);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    switch (Initial.NameOfCategoryOfProduct)
+                    {
+                        case "Computers":
+                            var type = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_CMP") >= 0).Select(x => x.ID_Type).ToList();
+                            this.ctg = "_CMP";
+                            foreach (var t in type)
+                            {
+                                foreach (var tp in db.Types_Products)
+                                {
+                                    if (t == tp.ID_Type)
+                                    {
+                                        foreach (var prod in db.Products)
+                                        {
+                                            if (prod.ID_Product == tp.ID_Product)
+                                            {
+                                                if (prod.Discount > 0)
+                                                {
+                                                    int cena = prod.Discount ?? 0;
+                                                    int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                    int count;
+                                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                                    try
+                                                    {
+                                                        count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                    }
+                                                    catch (System.InvalidOperationException ex)
+                                                    {
+                                                        count = 0;
+                                                    }
+                                                    Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                        prod.Specifications, prod.Price, cena.ToString(), new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    NP.Add(p);
+                                                }
+                                                else
+                                                {
+                                                    int cena = prod.Price;
+                                                    int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                    int count;
+                                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                                    try
+                                                    {
+                                                        count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                    }
+                                                    catch (System.InvalidOperationException ex)
+                                                    {
+                                                        count = 0;
+                                                    }
+                                                    Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                        prod.Specifications, prod.Price, "", new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    NP.Add(p);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            ProductList.ItemsSource = NP;
+                            break;
+
+                        case "Notebook":
+                            var type1 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_NTB") >= 0).Select(x => x.ID_Type).ToList();
+                            this.ctg = "_NTB";
+                            foreach (var t in type1)
+                            {
+                                foreach (var tp in db.Types_Products)
+                                {
+                                    if (t == tp.ID_Type)
+                                    {
+                                        foreach (var prod in db.Products)
+                                        {
+                                            if (prod.ID_Product == tp.ID_Product)
+                                            {
+                                                if (prod.Discount > 0)
+                                                {
+                                                    int cena = prod.Discount ?? 0;
+                                                    int count;
+                                                    int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                                    try
+                                                    {
+                                                        count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                    }
+                                                    catch (System.InvalidOperationException ex)
+                                                    {
+                                                        count = 0;
+                                                    }
+                                                    Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                        prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    NP.Add(p);
+                                                }
+                                                else
+                                                {
+                                                    int cena = prod.Price;
+                                                    int count;
+                                                    int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                                    try
+                                                    {
+                                                        count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                    }
+                                                    catch (System.InvalidOperationException ex)
+                                                    {
+                                                        count = 0;
+                                                    }
+                                                    Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                        prod.Specifications, prod.Price, "", new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    NP.Add(p);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            ProductList.ItemsSource = NP;
+                            break;
+
+                        case "Accessory":
+                            var type2 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_ACS") >= 0).Select(x => x.ID_Type).ToList();
+                            this.ctg = "_ACS";
+
+                            foreach (var t in type2)
+                            {
+                                foreach (var tp in db.Types_Products)
+                                {
+                                    if (t == tp.ID_Type)
+                                    {
+                                        foreach (var prod in db.Products)
+                                        {
+                                            if (prod.ID_Product == tp.ID_Product)
+                                            {
+                                                if (prod.Discount > 0)
+                                                {
+                                                    int cena = prod.Discount ?? 0;
+                                                    int count;
+                                                    int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                                    try
+                                                    {
+                                                        count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                    }
+                                                    catch (System.InvalidOperationException ex)
+                                                    {
+                                                        count = 0;
+                                                    }
+                                                    Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                        prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    NP.Add(p);
+                                                }
+                                                else
+                                                {
+                                                    int cena = prod.Price;
+                                                    int count;
+                                                    int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                                    try
+                                                    {
+                                                        count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                    }
+                                                    catch (System.InvalidOperationException ex)
+                                                    {
+                                                        count = 0;
+                                                    }
+                                                    Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                        prod.Specifications, prod.Price, "", new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    NP.Add(p);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            ProductList.ItemsSource = NP;
+                            break;
+
+                        case "Complect":
+                            var type3 = db.TypesOfProducts.Where(x => x.NameOfType.IndexOf("_CKT") >= 0).Select(x => x.ID_Type).ToList();
+                            this.ctg = "_CKT";
+                            foreach (var t in type3)
+                            {
+                                foreach (var tp in db.Types_Products)
+                                {
+                                    if (t == tp.ID_Type)
+                                    {
+                                        foreach (var prod in db.Products)
+                                        {
+                                            if (prod.ID_Product == tp.ID_Product)
+                                            {
+                                                if (prod.Discount > 0)
+                                                {
+                                                    int cena = prod.Discount ?? 0;
+                                                    int count;
+                                                    int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                                    try
+                                                    {
+                                                        count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                    }
+                                                    catch (System.InvalidOperationException ex)
+                                                    {
+                                                        count = 0;
+                                                    }
+                                                    Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                        prod.Specifications, cena, prod.Price.ToString(), new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    NP.Add(p);
+                                                }
+                                                else
+                                                {
+                                                    int cena = prod.Price;
+                                                    int count;
+                                                    int idtp = db.Types_Products.First(x => x.ID_Product == prod.ID_Product).ID_Type ?? 0;
+                                                    string tip = (db.TypesOfProducts.First(x => x.ID_Type == idtp).NameOfType).Split('_')[0];
+                                                    try
+                                                    {
+                                                        count = db.Warehouses.First(x => x.ID_Product == prod.ID_Product).CountOfProduct ?? 0;
+                                                    }
+                                                    catch (System.InvalidOperationException ex)
+                                                    {
+                                                        count = 0;
+                                                    }
+                                                    Prod p = new Prod(prod.ID_Product, prod.NameOfProduct, prod.DescriptionOfProduct,
+                                                        prod.Specifications, prod.Price, "", new ImageBrush(avat.ToImage(prod.AvatarOfProduct)), int.Parse(count.ToString()), tip);
+                                                    NP.Add(p);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            ProductList.ItemsSource = NP;
+                            break;
+
+                        default:
+                            break;
+
+                    }
+                }
+            }
+        }
+
+        private void MaxMin_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(SearchBox.Text))
+                { 
+                    ProductList.ItemsSource = NP.Where(x => (x.Cena <= int.Parse(MaxText.Text)) && (x.Cena >= int.Parse(MinText.Text))).ToList();
+                }
+                else
+                {
+                    ProductList.ItemsSource = NP.Where(x => (x.Cena <= int.Parse(MaxText.Text)) && (x.Cena >= int.Parse(MinText.Text)) && (x.Name.ToLower().IndexOf(SearchBox.Text.ToLower()) >= 0)).ToList();
+                }
+            }
+            catch
+            {
+            }
         }
     }
 }

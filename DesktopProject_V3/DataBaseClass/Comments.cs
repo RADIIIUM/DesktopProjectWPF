@@ -14,6 +14,15 @@ namespace DesktopProject_V3.DataBaseClass
             Products = new HashSet<Products>();
         }
 
+        public Comments(string Title, string Desc, string Login, int Rating, Products prd)
+        {
+            this.ParagraphOfComment = Title;
+            this.DescriptionOfComment = Desc;
+            this.LoginOfUser = Login;
+            this.Rating = Rating;
+            this.Products.Add(prd);
+        }
+
         [Key]
         public int ID_Comment { get; set; }
 

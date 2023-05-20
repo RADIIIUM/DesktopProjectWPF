@@ -5,33 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopProject_V3"
         mc:Ignorable="d"
-        Title="Product" Height="657" Width="800"       
+        Title="Product" Width="800" 
+      
         xmlns:Parallax="clr-namespace:Parallax.WPF.Controls;assembly=Parallax.WPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         ResizeMode="NoResize"
         WindowStyle="None"
         AllowsTransparency="True"
-         MouseLeftButtonDown="Window_MouseLeftButtonDown"
-        Background="Transparent"
+        WindowStartupLocation="CenterScreen"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
         >
+    <!--Height="657"-->
     <ScrollViewer>
-        <Border 
-                BorderThickness="6"
-                CornerRadius="40"
-               >
-        <Border.Background>
-            <LinearGradientBrush>
-                <GradientStop Color="#9e2882" Offset="0.5" />
-                <GradientStop Color="#e437ed" Offset="0.5" />
-            </LinearGradientBrush>
-        </Border.Background>
-        <Border.BorderBrush>
-            <LinearGradientBrush>
-                <GradientStop Color="#fc0000" Offset="0.5" />
-                <GradientStop Color="#a80000" Offset="0.5" />
-            </LinearGradientBrush>
-        </Border.BorderBrush>
         <StackPanel  Orientation="Vertical">
+            <StackPanel.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="#9e2882" Offset="0.5" />
+                    <GradientStop Color="#e437ed" Offset="0.5" />
+                </LinearGradientBrush>
+            </StackPanel.Background>
             <StackPanel>
 
                 <StackPanel DockPanel.Dock="Right"
@@ -59,10 +51,10 @@
                                          materialDesign:Width="35"/>
                     </Button>
                 </StackPanel>
-                    <StackPanel Orientation="Vertical">
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Height="218"
+                <StackPanel Orientation="Vertical">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Height="218"
                                  x:Name="ProductIcon"
                                 Width="215"
                                 Fill="White"
@@ -70,8 +62,8 @@
                                 Margin="20,0,0,0"
                                            MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
 
-                                <StackPanel Width="535" Margin="10,0,10,0">
-                                    <TextBox TextWrapping="Wrap"
+                            <StackPanel Width="535" Margin="10,0,10,0">
+                                <TextBox TextWrapping="Wrap"
                                              x:Name="NameOfProduct"
                                              materialDesign:HintAssist.Hint="Название"
                                                FontSize="40"
@@ -81,7 +73,7 @@
 
 
 
-                                    <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}" 
                                              TextWrapping="Wrap"
                                              x:Name="PriceOfProduct"
                                              materialDesign:HintAssist.Hint="Цена"
@@ -90,9 +82,9 @@
                                              Margin="0,10,0,0" Width="506"/>
 
 
-                                    <TextBlock Margin="40,5,0,0" TextWrapping="Wrap"
+                                <TextBlock Margin="40,5,0,0" TextWrapping="Wrap"
                                                x:Name="Akcia">
-                                        <Run Text="Без акции: "
+                                        <Run Text="По акции: "
                                        FontSize="25"
                                        Foreground="#ff5c5c"
                                        FontFamily="Arial" 
@@ -117,14 +109,14 @@
                                        FontFamily="Arial" 
                                            BaselineAlignment="Center"/>
 
-                                    </TextBlock>
-                                </StackPanel>
-
+                                </TextBlock>
                             </StackPanel>
 
                         </StackPanel>
-                        <StackPanel Width="740" Height="353">
-                            <TextBlock FontSize="20"
+
+                    </StackPanel>
+                    <StackPanel Width="740" Height="353">
+                        <TextBlock FontSize="20"
                                        Foreground="White"
                                        FontWeight="ExtraLight"
                                        FontFamily="Impact"
@@ -133,14 +125,14 @@
                                 <Run Text="Тип товара:"/>
                                 <Run x:Name="TypeProductText"/>
 
-                            </TextBlock>
-                            <TextBlock Text="Описание_____________"
+                        </TextBlock>
+                        <TextBlock Text="Описание_____________"
                                        FontSize="30"
                                        Foreground="White"
                                        FontFamily="Impact" Height="42"
                                            TextDecorations="Underline" Width="720" 
                                        Margin="0,15,0,10"/>
-                            <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                        <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}" 
                                              TextWrapping="Wrap"
                                              materialDesign:HintAssist.Hint="Описание"
                                              Foreground="White"
@@ -148,15 +140,15 @@
                                              Height="261" Width="708"
                                      x:Name="DescriptionOfProduct"/>
 
-                        </StackPanel>
-                        <StackPanel Width="740" Height="370">
-                            <TextBlock Text="Характеристики_____________"
+                    </StackPanel>
+                    <StackPanel Width="740" Height="370">
+                        <TextBlock Text="Характеристики_____________"
                                        FontSize="30"
                                        Foreground="White"
                                        FontFamily="Impact" Height="42"
                                            TextDecorations="Underline" Width="720" 
                                        Margin="0,15,0,10"/>
-                            <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}" 
+                        <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}" 
                                              TextWrapping="Wrap"
                                              materialDesign:HintAssist.Hint="Характеристика"
                                              Foreground="White"
@@ -164,82 +156,49 @@
                                              FontSize="16"
                                              Height="274" Width="708"/>
 
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical">
-                            <Button Content="Добавить в корзину" Width="492"
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <Button Content="Добавить в корзину" Width="492"
                                     HorizontalAlignment="Center"
                                     FontSize="18"/>
-                        </StackPanel>
-                        <StackPanel Height="530">
-                            <TextBlock Text="Комментарии__________________________"
-                                       FontSize="30"
-                                       Foreground="White"
-                                       FontFamily="Impact" Height="42"
-                                           TextDecorations="Underline" Width="720" 
-                                       Margin="0,15,0,10"/>
-                            <ListBox Margin="30" Height="200">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
+                    </StackPanel>
+                    <StackPanel Height="143">
 
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBox Text="Hello"
-                                     FontSize="16"
-                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                                     Background="Purple"
-                                     Margin="50,0,10,0"
-                                     Foreground="White" Width="664"/>
-                                <Button
-  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-  Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
-  ToolTip="MaterialDesignFloatingActionMiniDarkButton">
-                                    <materialDesign:PackIcon
-    Width="25"
-    Height="25"
-    Kind="Send" />
-                                </Button>
-                            </StackPanel>
-                            <StackPanel x:Name="ComboStackPanel">
-                                <TextBlock Text="Тип товара"
+                        <StackPanel x:Name="ComboStackPanel">
+                            <TextBlock Text="Тип товара"
                                        Margin="40,40,0,0"
                                        FontSize="16"/>
                             <ComboBox Margin="40,5,40,0"
                                       x:Name="ComboType"/>
-                            </StackPanel>
-
-
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal"
+
+
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
                                 Margin="30">
-                            <StackPanel Width="371">
-                                <TextBox materialDesign:HintAssist.Hint="Номер поставщика"
+                        <StackPanel Width="371">
+                            <TextBox materialDesign:HintAssist.Hint="Номер поставщика"
                                          x:Name="NumSup"/>
-                                <TextBox materialDesign:HintAssist.Hint="Кол-во на складе"
+                            <TextBox materialDesign:HintAssist.Hint="Кол-во на складе"
                                          x:Name="CountInWare"/>
 
-                            </StackPanel>
-
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal"
+
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
-                            <Button Content="Удалить товар"
+                        <Button Content="Удалить товар"
                                     x:Name="DeleteBtn"
                                     Click="DeleteBtn_Click"
                                     Margin="0,0,50,0"/>
-                            <Button Content="Сохранить товар"
+                        <Button Content="Сохранить товар"
                                     x:Name="SaveBtn"
                                     Click="SaveBtn_Click"/>
-                        </StackPanel>
-                        <!--Тут нужно будет добавить кнопки Удалить, Сохранить, Добавить товар-->
                     </StackPanel>
-
-
                 </StackPanel>
+
+
+            </StackPanel>
         </StackPanel>
-
-    </Border>
     </ScrollViewer>
-
 </Window>
