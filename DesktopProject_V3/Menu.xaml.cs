@@ -1,6 +1,7 @@
 ﻿using DesktopProject_V3.DataBaseClass;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
@@ -21,26 +22,108 @@ namespace DesktopProject_V3
     /// <summary>
     /// Логика взаимодействия для Menu.xaml
     /// </summary>
+    /// 
+
+    public class UserItem
+    {
+        public UserItem(string Login, string Name, string Role, ImageBrush ava)
+        {
+            this.Login = Login;
+            this.Name = Name;
+            this.Role = Role;
+            this.Avatar = ava;
+        }
+        public ImageBrush Avatar { get; set; }
+        public string Login { get; set; }
+        public string Name { get; set; }
+        public string Role { get; set; }
+    }
+    public class ProductItem
+    {
+        public ProductItem()
+        {
+
+        }
+
+        public ProductItem(string name, int count, ImageBrush avatar, int price, string adress)
+        {
+            this.Name = name;
+            this.Count = count;
+            this.avatar = avatar;
+            this.Price = price;
+            this.AdressDelivery = adress;
+
+
+
+        }
+
+        public string Name { get; set; }
+        public int Count { get; set; }
+        public ImageBrush avatar { get; set; }
+
+        public int Price { get; set; }
+
+        public string AdressDelivery { get; set; }
+
+    }
+   
     public partial class Menu : Window
     {
         public static Menu menu;
+        public ObservableCollection<ProductItem> ProductsList { get; set; }
+
+        public ObservableCollection<UserItem> UserList { get; set; }
         public Menu()
         {
             InitializeComponent();
             Avatar ava = new Avatar();
             using (Model1 db = new Model1())
             {
-                foreach (var r in db.Roles)
+                try
                 {
-                    if (r.LoginOfUsers.Replace(" ", "") == Initial.login.Replace(" ", "") && (r.NameOfRole.Replace(" ", "") == "Администратор" || r.NameOfRole.Replace(" ", "") == "Модератор"))
+                    var orders = db.Orders_Users.Where(x => x.LoginOfUser == Initial.login).Select(x => x.ID_Order).ToList();
+                    var orders2 = db.Orders.Where(x => orders.FindAll(t => t == x.ID_Order) != null).ToList();
+                    var orders_product = db.Orders_Products.Where(x => orders.FindAll(t => t == x.ID_Order) != null).ToList();
+                    var productsInOrder = db.Products.Where(x => orders_product.FindAll(t => t.ID_Product == x.ID_Product) != null).ToList();
+                    foreach(var p in orders2)
                     {
-                        this.AddNews.Visibility = Visibility.Visible; 
-                    }
-                    else
-                    {
-                        this.AddNews.Visibility = Visibility.Collapsed; 
-                    }
+                      ListOrders.Items.Add($"{p.ID_Order} - {p.DataOrder} - {p.TypeOfDelivery} - {p.TypeOfPayment}");
+                    }  
+                }
 
+                catch
+                {
+
+                }
+                UserList = new ObservableCollection<UserItem>();
+                foreach (var user in db.Users)
+                    {
+                    if (user != null)
+                    {
+                        try
+                        {
+                            string role = db.Roles.FirstOrDefault(x => x.LoginOfUsers == user.LoginOfUser).NameOfRole ?? null;
+                            UserItem ui = new UserItem(user.LoginOfUser, user.NameOfUser, role, new ImageBrush(ava.ToImage(user.Avatar)));
+                            UserList.Add(ui);
+                        }
+                        catch (System.NullReferenceException ex)
+                        { 
+                            
+                        }
+                    }
+                    }
+                    MenuUserList.ItemsSource = UserList;
+
+                string role2 = db.Roles.First(x => x.LoginOfUsers == Initial.login).NameOfRole;
+                if ((role2.Replace(" ", "") == "Администратор"))
+                {
+                    AddNews.Visibility = Visibility.Visible;
+                    UsersTabItem.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    AddNews.Visibility = Visibility.Collapsed;
+                    UsersTabItem.Visibility = Visibility.Collapsed;
                 }
                 foreach (var user in db.Users)
                 {
@@ -240,6 +323,115 @@ namespace DesktopProject_V3
             WindowOfProducts wp = new WindowOfProducts();
             this.Close();
             wp.ShowDialog();
+        }
+
+        private void ListOrders_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                using (Model1 db = new Model1())
+                {
+                string item = ListOrders.SelectedItem.ToString();
+                string id = item.Split('-')[0];
+                Orders or = db.Orders.FirstOrDefault(x => x.ID_Order == int.Parse(id));
+                    AddressUser.Text = or.DeliveryAdress;
+                    PaymentMethod.SelectedIndex = (PaymentMethod.Items.IndexOf(or.TypeOfPayment));
+                    var products = db.Products.Where(x =>(db.Orders_Products.Where(y => y.ID_Order == int.Parse(id))) != null).ToList();
+                    foreach(var pr in products)
+                    {
+                        Avatar avat = new Avatar();
+                        int countOfProduct = db.Orders_Products.FirstOrDefault(x => x.ID_Product == pr.ID_Product).CountOfProduct ?? 0;
+                        Orders ord = db.Orders.FirstOrDefault(x => x.ID_Order == int.Parse(id));
+                        ProductItem p = new ProductItem(pr.NameOfProduct, countOfProduct, new ImageBrush(avat.ToImage(pr.AvatarOfProduct)),pr.Price*countOfProduct,ord.DeliveryAdress);
+                        ProductsList.Add(p);
+                    }
+                    ListOfProducts.ItemsSource = ProductsList;
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void DeleteProduct_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NewOrderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            using(Model1 db = new Model1())
+            {
+                if(ListOfProducts.Items.Count <= 0)
+                {
+                    MessageBox.Show(" Нельзя оформить пустой заказ ");
+                }
+                if (string.IsNullOrEmpty(AddressUser.Text) || 
+                    string.IsNullOrEmpty(PaymentMethod.SelectedItem.ToString()) && ListOfProducts.Items.Count > 0)
+                {
+                    MessageBox.Show(" Строки адреса и выбор метода оплаты не должны быть пустыми ");
+                }
+                else
+                {
+                    Orders ord = new Orders();
+                }
+            }
+        }
+
+        private void OpenOrder_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteOrder_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BanUserBtn_Click(object sender, RoutedEventArgs e)
+        {
+            UserItem ui = (UserItem)MenuUserList.SelectedItem;
+            if (ui.Login != null)
+            {
+                MessageBoxResult result = MessageBox.Show($"Вы уверены, что хотите\nзаблокировать пользователя? {ui.Login}", "Заблокировать пользователя?", MessageBoxButton.YesNo);
+                if(result == MessageBoxResult.Yes)
+                {
+                    using(Model1 db = new Model1())
+                    {
+                        Roles roles = new Roles("Заблокированный", ui.Login);
+                        db.Roles.Add(roles);
+                        db.SaveChanges();
+                        MessageBox.Show($"{ui.Login} был заблокирован");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Выберите пользователя");
+            }
+        }
+
+        private void OpenProfileBtn_Click(object sender, RoutedEventArgs e)
+        {
+            UserItem ui = (UserItem)MenuUserList.SelectedItem;
+            if (ui.Login != null)
+            {
+                Initial.ShowProfile = true;
+                Initial.OldLogin = Initial.login;
+                Initial.login = ui.Login;
+                UserProfile up = new UserProfile();
+                up.Show();
+            }
+            else
+            {
+                MessageBox.Show($"Выберите пользователя");
+            }
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

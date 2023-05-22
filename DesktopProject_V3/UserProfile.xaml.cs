@@ -29,7 +29,39 @@ namespace DesktopProject_V3
             InitializeComponent();
             using (Model1 db = new Model1())
             {
-                foreach(var user in db.Users)
+                if (Initial.ShowProfile)
+                {
+                    Address.IsReadOnly = true;
+                    Username.IsReadOnly = true;
+                    Email.IsReadOnly = true;
+                    BankCardBox.Visibility = Visibility.Collapsed;
+                    Telephone.IsReadOnly = true;
+                    Passport.IsReadOnly = true;
+                    ChangeAvatar.Visibility = Visibility.Collapsed;
+                    ChangePassStackPanel.Visibility = Visibility.Collapsed;
+                    ChangePassStackPanel.Visibility = Visibility.Collapsed;
+                    LeaveAccount.Visibility = Visibility.Collapsed;
+                    DeleteProfile.Visibility = Visibility.Collapsed;
+                    BalanceBorder.Visibility = Visibility.Collapsed;
+                    ChangeStackPanel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Address.IsReadOnly = false;
+                    Username.IsReadOnly = false;
+                    Email.IsReadOnly = false;
+                    BankCardBox.Visibility = Visibility.Visible;
+                    Telephone.IsReadOnly = false;
+                    Passport.IsReadOnly = false;
+                    ChangePassStackPanel.Visibility = Visibility.Visible;
+                    ChangePassStackPanel.Visibility = Visibility.Visible;
+                    ChangeAvatar.Visibility = Visibility.Visible;
+                    LeaveAccount.Visibility = Visibility.Visible;
+                    DeleteProfile.Visibility = Visibility.Visible;
+                    BalanceBorder.Visibility = Visibility.Visible;
+                    ChangeStackPanel.Visibility = Visibility.Collapsed;
+                }
+                foreach (var user in db.Users)
                 {
                     if(user.LoginOfUser == Initial.login)
                     {
@@ -40,9 +72,8 @@ namespace DesktopProject_V3
                         Email.Text = user.Email;
                         BankCardBox.Password = user.BankCard;
                         Description.Text = user.DescriptionOfUser;
-                        ImageBrush av = new ImageBrush();
-                        av.ImageSource = Avatar.ava;
-                        ProfileAva.Fill = av;
+                        Avatar ava = new Avatar();
+                        ProfileAva.Fill = new ImageBrush(ava.ToImage(user.Avatar));
                         BalanceTB.Text = (user.Balance == null ? 0 : user.Balance).ToString();
                         foreach (var privilege in db.Privilege_Users)
                         {
@@ -73,8 +104,6 @@ namespace DesktopProject_V3
                     }
                 }
             }
-            
-            Username.IsReadOnly = false;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -86,25 +115,30 @@ namespace DesktopProject_V3
         {
             using(Model1 db = new Model1())
             {
-                foreach (var save in db.Users)
+                if (!Initial.ShowProfile)
                 {
-                    if(Initial.login == save.LoginOfUser)
+                    foreach (var save in db.Users)
                     {
-                        if (UserProfile.bytt != null)
+                        if (Initial.login == save.LoginOfUser)
                         {
-                            save.Avatar = UserProfile.bytt;
+                            if (UserProfile.bytt != null)
+                            {
+                                save.Avatar = UserProfile.bytt;
+                            }
+                            save.NameOfUser = Username.Text;
+                            save.BankCard = BankCardBox.Password;
+                            save.Passport = Passport.Text;
+                            save.AddressOfUser = Address.Text;
+                            save.DescriptionOfUser = Description.Text;
+                            save.Email = Email.Text;
+                            save.Telephone = Telephone.Text;
+                            MessageBox.Show("Изменения сохранены");
                         }
-                        save.NameOfUser = Username.Text;
-                        save.BankCard = BankCardBox.Password;
-                        save.Passport = Passport.Text;
-                        save.AddressOfUser = Address.Text;
-                        save.DescriptionOfUser = Description.Text;
-                        save.Email = Email.Text;
-                        save.Telephone = Telephone.Text;
-                        MessageBox.Show("Изменения сохранены");
                     }
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
+                Initial.login = Initial.OldLogin;
+                Initial.ShowProfile = false;
                     this.Close();
             }
 
@@ -114,18 +148,6 @@ namespace DesktopProject_V3
         private void MinWindow_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
-        }
-
-        private void RedactNameButton_Click(object sender, RoutedEventArgs e)
-        {
-            if(Username.IsReadOnly)
-            {
-                Username.IsReadOnly = false;
-            }
-            else
-            {
-                Username.IsReadOnly = true;
-            }
         }
 
         private void ChangePass_Click(object sender, RoutedEventArgs e)
@@ -203,6 +225,30 @@ namespace DesktopProject_V3
                     this.Close();
                     this.Owner.Close();
                     aut.Show();
+                }
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string role = ChangeRoleCombo.SelectedItem.ToString();
+            if(!string.IsNullOrEmpty(role))
+            {
+                MessageBoxResult mgr = MessageBox.Show("Вы уверены, что хотите изменить роль?", "Сменить роль?", MessageBoxButton.YesNo);
+                if(mgr == MessageBoxResult.Yes)
+                {
+                    using(Model1 db = new Model1())
+                    {
+                        foreach(var roles in db.Roles)
+                        {
+                            if(roles.LoginOfUsers == Initial.login)
+                            {
+                                roles.NameOfRole = role;
+                                MessageBox.Show("Роль пользователя изменена");
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }

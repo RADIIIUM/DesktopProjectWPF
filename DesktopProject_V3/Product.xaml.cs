@@ -340,5 +340,29 @@ namespace DesktopProject_V3
                 }
             }
         }
+
+        private void CartButton_Click(object sender, RoutedEventArgs e)
+        {
+            using(Model1 db = new Model1())
+            {
+                if(Initial.IDProduct != -1 )
+                {
+                    if(CountInWare.Text == "0" || string.IsNullOrEmpty(CountInWare.Text)) 
+                    {
+                        MessageBox.Show("Данного товара нет в наличии");
+                    }
+                    else
+                    {
+                        Products prod = db.Products.FirstOrDefault(x => x.ID_Product == Initial.IDProduct);
+                        Initial.Cart.Add(prod);
+                        MessageBox.Show("Товар был добавлен в магазин");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Создайте товар прежде чем его добавлять в корзину");
+                }
+            }
+        }
     }
 }

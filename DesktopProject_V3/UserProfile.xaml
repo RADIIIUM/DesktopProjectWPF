@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopProject_V3"
         mc:Ignorable="d"
-        Title="UserProfile" Height="698" Width="600"
+        Title="UserProfile"  Width="600"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         ResizeMode="NoResize"
         WindowStyle="None"
@@ -75,7 +75,7 @@
                     DockPanel.Dock="Right"
                     CornerRadius="30"
                     Margin="5"
-
+                    x:Name="BalanceBorder"
                     >
                 <StackPanel Orientation="Horizontal"
                             Margin="5">
@@ -101,22 +101,6 @@
                     </Border>
                 </StackPanel>
             </Border>
-            <Button
-             Margin="0,0,5,0"
-             Background="Transparent"
-  HorizontalAlignment="Right"
-  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-  ToolTip="MaterialDesignFloatingActionMiniButton">
-                <materialDesign:PackIcon
-                x:Name="BellNotif"
-                Width="30"
-                Height="30"
-                Kind="Bell"
-                Foreground="#704391"  >
-
-                </materialDesign:PackIcon>
-            </Button >
         </DockPanel>
 
         <Ellipse Fill="White"
@@ -149,16 +133,6 @@
                            TextAlignment="Center"
                            x:Name="Username" Grid.Column="0" 
                            />
-
-                        <Button
-  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-  Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
-  ToolTip="MaterialDesignFloatingActionMiniDarkButton"
-                        x:Name="RedactNameButton"
-                        Click="RedactNameButton_Click" Grid.ColumnSpan="2" Margin="292,0,-8,0" >
-                            <materialDesign:PackIcon Kind="Pencil" 
-                                                     />
-                        </Button>
                     </Grid>
                 </Border>
 
@@ -262,7 +236,7 @@
                     Width="500"
                     HorizontalAlignment="Center"
                     Padding="8"
-                    CornerRadius="20">
+                    CornerRadius="20" x:Name="ChangePassStackPanel">
                     <StackPanel>
                         <TextBlock Text="Новый пароль"
                                Foreground="White"/>
@@ -299,6 +273,21 @@
                             Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
                     </StackPanel>
                 </Border>
+
+                <StackPanel Margin="20" x:Name="ChangeStackPanel">
+                    <TextBlock Text="Изменить роль"
+                               FontSize="20"
+                               Foreground="White"/>
+                    <ComboBox x:Name="ChangeRoleCombo">
+                        <ComboBoxItem Content="Заблокированный"/>
+                        <ComboBoxItem Content="Пользователь"/>
+                        <ComboBoxItem Content="Модератор"/>
+                        <ComboBoxItem Content="Администратор"/>
+                    </ComboBox>
+                    <Button Content="Изменить роль"
+                            Click="Button_Click"/>
+
+                </StackPanel>
 
                 <Button Content="Сменить аватар"
                                 x:Name="ChangeAvatar"

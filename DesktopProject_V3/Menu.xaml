@@ -880,22 +880,170 @@
             Text="Корзина" />
                         </StackPanel>
                     </TabItem.Header>
-                    <TextBlock>
-        <Run
-          Text="tab 2 content. Default look and behaviors." />
-        <LineBreak />
-        <LineBreak />
-        <Run
-          FontStyle="Italic">
-        Praesent sed dui arcu. Vivamus porta auctor sagittis
-      </Run>
-                    </TextBlock>
+                    <ScrollViewer Background="DarkSlateBlue">
+                        <StackPanel>
+                            <StackPanel.Background>
+                                <LinearGradientBrush>
+                                    <GradientStop Offset="0.3" Color="#422D52" />
+                                    <GradientStop Offset="0.7" Color="#754790" />
+                                </LinearGradientBrush>
+                            </StackPanel.Background>
+
+
+                            <StackPanel Height="200">
+                                <StackPanel Orientation="Horizontal"
+                                            Height="40"
+                                            Background="DarkSlateBlue"
+                                            >
+                                    <materialDesign:PackIcon Kind="BookmarkOutline" 
+                                                             Foreground="White"
+                                                             Height="30"
+                                                             Width="30"/>
+                                    <TextBlock Foreground="White"
+                                               FontSize="16"
+                                               FontWeight="Bold"
+                                               Margin="5">
+                                        <Run Text="Общее число заказов:"
+                                             BaselineAlignment="Center"/>
+                                        <Run Text="2000"
+                                             x:Name="AllOrdersText"
+                                             BaselineAlignment="Center"/>
+                                         <Run Text=" шт."
+                                             BaselineAlignment="Center"/>
+                                    </TextBlock>
+
+                                    <Button Content="Открыть заказ"
+                                            x:Name="OpenOrder"
+                                            Margin="40,0,0,0"
+                                            Click="OpenOrder_Click"/>
+                                    <Button Content="Отменить заказ"
+                                            x:Name="DeleteOrder"
+                                            Margin="40,0,0,0"
+                                            Click="DeleteOrder_Click"/>
+                                </StackPanel>
+                                <ListBox Height="158"
+                                         x:Name="ListOrders"
+                                         SelectionChanged="ListOrders_SelectionChanged">
+                                    
+                                </ListBox>
+                            </StackPanel>
+                            
+                            <StackPanel
+                                Height="130"
+                                Background="DarkSlateBlue"
+                                Orientation="Horizontal">
+                                <StackPanel>
+                                    <TextBlock Foreground="White"
+                                           FontWeight="Bold"
+                                           Margin="10,10,0,0"
+                                           FontSize="20">
+                                    <materialDesign:PackIcon Kind="CurrencyUsd"
+                                                             Width="40"
+                                                             Height="40"/>
+                                   <Run Text="Общая сумма:" BaselineAlignment="Center"/>
+                                    
+                                    <Run Text="2000"
+                                         x:Name="AllSum"
+                                         BaselineAlignment="Center"/>
+                                </TextBlock>
+
+                                <TextBlock Foreground="White"
+                                           FontWeight="Bold"
+                                           Margin="10"
+                                           FontSize="20">
+                                    <materialDesign:PackIcon Kind="ArchiveOutline"
+                                                             Width="40"
+                                                             Height="40"/>
+                                    <Run Text="Кол-во товаров:"
+                                         BaselineAlignment="Center"/>
+                                    <Run Text="2000"
+                                         x:Name="AllProducts"
+                                         BaselineAlignment="Center"/>
+                                </TextBlock>
+                                </StackPanel>
+
+                                <StackPanel Width="327"
+                                            Margin="10,10,0,10">
+                                    <TextBlock Text="Адрес доставки_____"
+                                               FontSize="14"
+                                               Foreground="White"
+                                               FontWeight="Bold"
+                                               TextDecorations="Underline"/>
+                                    <TextBox
+                                     HorizontalContentAlignment="Left" 
+                                        Margin="5"
+                                        Foreground="White"
+                                        x:Name="AddressUser"
+                                        materialDesign:HintAssist.Hint="Адрес"/>
+                                    <TextBlock Text="Способ оплаты_____"
+                                               FontSize="14"
+                                               Foreground="White"
+                                               FontWeight="Bold"
+                                               TextDecorations="Underline"/>
+                                    <ComboBox Foreground="White"
+                                              x:Name="PaymentMethod">
+                                        <ComboBoxItem>Банковская карта</ComboBoxItem>
+                                        <ComboBoxItem>Наличными</ComboBoxItem>
+                                        <ComboBoxItem>Кредит/Рассрочка</ComboBoxItem>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Width="280"
+                                            Margin="10,10,0,10">
+                                    <Button Content="Оформить заказ" Height="26"
+                                            FontSize="15" FontStyle="Italic"
+                                            x:Name="NewOrderBtn"
+                                            Click="NewOrderBtn_Click"/>
+                                    <Button Content="Удалить товар" Height="26"
+                                            FontSize="15"  Margin="0,10,0,0" FontStyle="Italic"
+                                            x:Name="DeleteProduct"
+                                            Click="DeleteProduct_Click"/>
+
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel>
+                                <ListBox Height="272" x:Name="ListOfProducts" >
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Height="90"
+                                            Margin="20,10,20,0"
+                                            Background="RoyalBlue"
+                                            Orientation="Horizontal">
+                                                <Rectangle Width="100"
+                                           Margin="5"
+                                           Fill ="{Binding avatar}"/>
+                                                <StackPanel Width="412">
+                                                    <TextBlock  Text="{Binding Name}"
+                                                    FontSize="20"
+                                                    FontWeight="Bold"
+                                                    TextWrapping="Wrap"/>
+                                                    <TextBlock FontSize="16">
+                                            <Run Text="Кол-во товара:"/>
+                                            <Run  Text="{Binding Count}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <TextBlock FontSize="20"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontWeight="Bold"
+                                               >
+                                        <Run Text="Цена товара(ов):"
+                                             BaselineAlignment="Center"/>
+                                        <Run BaselineAlignment="Center"  Text="{Binding Price}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                            
+                        </StackPanel>
+                    </ScrollViewer>
                 </TabItem>
 
                 <!--==============================================================
                     Контент "Юзеры"
         ==============================================================-->
-                <TabItem>
+                <TabItem x:Name="UsersTabItem">
                     <TabItem.Header>
                         <StackPanel
           Width="auto"
@@ -910,12 +1058,90 @@
             Text="Юзеры" />
                         </StackPanel>
                     </TabItem.Header>
-                    <TextBlock>
-        <Run
-          Text="tab 3 content. Default look and behaviors." />
-        <LineBreak />
-        <LineBreak />
-                    </TextBlock>
+                    <ScrollViewer Background="DarkSlateBlue">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel.Background>
+                                <LinearGradientBrush>
+                                    <GradientStop Offset="0.3" Color="#422D52" />
+                                    <GradientStop Offset="0.7" Color="#754790" />
+                                </LinearGradientBrush>
+                            </StackPanel.Background>
+                            <StackPanel Width="797"
+                                        Orientation="Horizontal"
+                                        Background="DarkSlateBlue" Height="41"
+                                        Margin="20">
+                                <TextBox materialDesign:HintAssist.Hint="Поиск"
+                                 x:Name="SearchBox" Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                     Foreground="White" Background="#1f0224" Width="235"
+                                         Margin="20,0,0,0"
+                                 TextChanged="SearchBox_TextChanged"/>
+                                <Button Content="Открыть профиль"
+                                                    Margin="20,00,0,0"
+                                                    x:Name="OpenProfileBtn"
+                                                            Click="OpenProfileBtn_Click"/>
+                                <Button Content="Заблокировать"
+                                                    Margin="20,0,0,0"
+                                                    Background="Red"
+                                                    x:Name="BanUserBtn"
+                                                            Click="BanUserBtn_Click"/>
+                            </StackPanel>
+                            <StackPanel Width="767"
+                                        >
+                                <TextBlock Text="Список пользователей______________________"
+                                           FontSize="20"
+                                           Foreground="White"
+                                           Margin="20,0,20,20"
+                                           FontWeight="Bold"
+                                           TextDecorations="Baseline"/>
+
+                                <ListBox Height="472" x:Name="MenuUserList">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Background="#754790"
+                                                Height="100"
+                                                Margin="10"
+                                                Orientation="Horizontal">
+
+                                                <Ellipse Width="80" Height="80"
+                                                         Fill="{Binding Avatar}"/>
+                                                <StackPanel Width="341">
+                                                    <TextBlock Text="{Binding Login}"
+                                                       x:Name="HideTextBoxLogin"
+                                                       Visibility="Collapsed"
+                                                       />
+
+                                                    <TextBlock Margin="10,10,0,0"
+                                                       Foreground="White"
+                                                       FontSize="16"
+                                                       Text=" Имя пользователя________"
+                                                       TextDecorations="Baseline">
+                                                 <materialDesign:PackIcon Kind="AccountCircle" />
+                                                    </TextBlock>
+                                                    <TextBlock Margin="10,0,0,0"
+                                                       Foreground="White"
+                                                       FontSize="16">
+                                                <Run Text="{Binding Name}"/>
+                                                    </TextBlock>
+                                                    <TextBlock Margin="10,0,0,0"
+                                                       Foreground="White"
+                                                       FontSize="16"
+                                                       Text=" Роль пользователя________"
+                                                       TextDecorations="Baseline">
+                                               <materialDesign:PackIcon Kind="AccountTieWoman" />
+                                                    </TextBlock>
+                                                    <TextBlock Margin="10,0,0,0"
+                                                       Foreground="White"
+                                                       FontSize="16">
+                                                <Run Text="{Binding Role}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
                 </TabItem>
 
             </TabControl>

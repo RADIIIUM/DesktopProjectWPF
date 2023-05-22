@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DesktopProject_V3"
         mc:Ignorable="d"
         Title="Product" Width="800" 
-      
+        Height="660"
         xmlns:Parallax="clr-namespace:Parallax.WPF.Controls;assembly=Parallax.WPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         ResizeMode="NoResize"
@@ -15,7 +15,6 @@
         WindowStartupLocation="CenterScreen"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         >
-    <!--Height="657"-->
     <ScrollViewer>
         <StackPanel  Orientation="Vertical">
             <StackPanel.Background>
@@ -160,6 +159,8 @@
                     <StackPanel Orientation="Vertical">
                         <Button Content="Добавить в корзину" Width="492"
                                     HorizontalAlignment="Center"
+                                x:Name="CartButton"
+                                Click="CartButton_Click"
                                     FontSize="18"/>
                     </StackPanel>
                     <StackPanel Height="143">

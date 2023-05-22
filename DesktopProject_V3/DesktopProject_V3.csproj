@@ -89,16 +89,15 @@
     <Compile Include="AllNews.xaml.cs">
       <DependentUpon>AllNews.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataBaseClass\Comments.cs" />
-    <Compile Include="DataBaseClass\HistoryOfUser.cs" />
-    <Compile Include="DataBaseClass\ImagesOfProduct.cs" />
     <Compile Include="DataBaseClass\Model1.cs" />
     <Compile Include="DataBaseClass\News.cs" />
+    <Compile Include="DataBaseClass\Orders.cs" />
+    <Compile Include="DataBaseClass\Orders_Products.cs" />
+    <Compile Include="DataBaseClass\Orders_Users.cs" />
     <Compile Include="DataBaseClass\Privilege.cs" />
     <Compile Include="DataBaseClass\Privilege_Users.cs" />
     <Compile Include="DataBaseClass\Products.cs" />
     <Compile Include="DataBaseClass\Roles.cs" />
-    <Compile Include="DataBaseClass\Statuses.cs" />
     <Compile Include="DataBaseClass\Suppliers.cs" />
     <Compile Include="DataBaseClass\sysdiagrams.cs" />
     <Compile Include="DataBaseClass\TypesOfProducts.cs" />
@@ -256,6 +255,7 @@
   <ItemGroup>
     <Resource Include="Images\ForShop\complect.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

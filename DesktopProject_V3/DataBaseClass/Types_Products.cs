@@ -8,8 +8,8 @@ namespace DesktopProject_V3.DataBaseClass
 
     public partial class Types_Products
     {
-        public Types_Products() 
-        { 
+        public Types_Products()
+        {
 
         }
         public Types_Products(int idt, int idp)

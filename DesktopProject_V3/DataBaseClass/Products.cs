@@ -5,18 +5,17 @@ namespace DesktopProject_V3.DataBaseClass
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
-    using System.Windows.Media.Animation;
 
     public partial class Products
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Products()
         {
+            Orders_Products = new HashSet<Orders_Products>();
             Suppliers = new HashSet<Suppliers>();
             Types_Products = new HashSet<Types_Products>();
             Warehouses = new HashSet<Warehouses>();
         }
-
         public Products(string name, byte[] avatar, int price, string desc, int disc, string spec)
         {
             this.NameOfProduct = name;
@@ -27,7 +26,6 @@ namespace DesktopProject_V3.DataBaseClass
             this.Discount = disc;
 
         }
-
         [Key]
         public int ID_Product { get; set; }
 
@@ -37,11 +35,7 @@ namespace DesktopProject_V3.DataBaseClass
 
         public byte[] AvatarOfProduct { get; set; }
 
-        public int? ImagesOfProduct { get; set; }
-
         public int Price { get; set; }
-
-        public int? Comments { get; set; }
 
         public string DescriptionOfProduct { get; set; }
 
@@ -51,9 +45,8 @@ namespace DesktopProject_V3.DataBaseClass
 
         public int? Discount { get; set; }
 
-        public virtual Comments Comments1 { get; set; }
-
-        public virtual ImagesOfProduct ImagesOfProduct1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Orders_Products> Orders_Products { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Suppliers> Suppliers { get; set; }

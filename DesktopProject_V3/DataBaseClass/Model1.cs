@@ -12,15 +12,14 @@ namespace DesktopProject_V3.DataBaseClass
         {
         }
 
-        public virtual DbSet<Comments> Comments { get; set; }
-        public virtual DbSet<HistoryOfUser> HistoryOfUser { get; set; }
-        public virtual DbSet<ImagesOfProduct> ImagesOfProduct { get; set; }
         public virtual DbSet<News> News { get; set; }
+        public virtual DbSet<Orders> Orders { get; set; }
+        public virtual DbSet<Orders_Products> Orders_Products { get; set; }
+        public virtual DbSet<Orders_Users> Orders_Users { get; set; }
         public virtual DbSet<Privilege> Privilege { get; set; }
         public virtual DbSet<Privilege_Users> Privilege_Users { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<Statuses> Statuses { get; set; }
         public virtual DbSet<Suppliers> Suppliers { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Types_Products> Types_Products { get; set; }
@@ -30,46 +29,42 @@ namespace DesktopProject_V3.DataBaseClass
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Comments>()
-                .Property(e => e.ParagraphOfComment)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Comments>()
-                .Property(e => e.DescriptionOfComment)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Comments>()
-                .Property(e => e.LoginOfUser)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Comments>()
-                .HasMany(e => e.Products)
-                .WithOptional(e => e.Comments1)
-                .HasForeignKey(e => e.Comments)
-                .WillCascadeOnDelete();
-
-            modelBuilder.Entity<HistoryOfUser>()
-                .Property(e => e.ActionOfUser)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<HistoryOfUser>()
-                .HasMany(e => e.Users)
-                .WithOptional(e => e.HistoryOfUser)
-                .HasForeignKey(e => e.ID_HistoryOfUser)
-                .WillCascadeOnDelete();
-
-            modelBuilder.Entity<ImagesOfProduct>()
-                .HasMany(e => e.Products)
-                .WithOptional(e => e.ImagesOfProduct1)
-                .HasForeignKey(e => e.ImagesOfProduct)
-                .WillCascadeOnDelete();
-
             modelBuilder.Entity<News>()
                 .Property(e => e.Paragraph)
                 .IsUnicode(false);
 
             modelBuilder.Entity<News>()
                 .Property(e => e.DescriptionOfNews)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Orders>()
+                .Property(e => e.StatusOfOrder)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Orders>()
+                .Property(e => e.TypeOfPayment)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Orders>()
+                .Property(e => e.TypeOfDelivery)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Orders>()
+                .Property(e => e.DeliveryAdress)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Orders>()
+                .HasMany(e => e.Orders_Products)
+                .WithOptional(e => e.Orders)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<Orders>()
+                .HasMany(e => e.Orders_Users)
+                .WithOptional(e => e.Orders)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<Orders_Users>()
+                .Property(e => e.LoginOfUser)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Privilege>()
@@ -99,6 +94,11 @@ namespace DesktopProject_V3.DataBaseClass
                 .IsUnicode(false);
 
             modelBuilder.Entity<Products>()
+                .HasMany(e => e.Orders_Products)
+                .WithOptional(e => e.Products)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<Products>()
                 .HasMany(e => e.Suppliers)
                 .WithOptional(e => e.Products)
                 .WillCascadeOnDelete();
@@ -119,10 +119,6 @@ namespace DesktopProject_V3.DataBaseClass
 
             modelBuilder.Entity<Roles>()
                 .Property(e => e.LoginOfUsers)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Statuses>()
-                .Property(e => e.NameOfStatus)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Suppliers>()
@@ -177,6 +173,11 @@ namespace DesktopProject_V3.DataBaseClass
             modelBuilder.Entity<Users>()
                 .Property(e => e.DescriptionOfUser)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<Users>()
+                .HasMany(e => e.Orders_Users)
+                .WithOptional(e => e.Users)
+                .WillCascadeOnDelete();
 
             modelBuilder.Entity<Users>()
                 .HasMany(e => e.Privilege_Users)
