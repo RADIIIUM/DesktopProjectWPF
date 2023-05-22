@@ -3,6 +3,7 @@ using DevExpress.Internal.WinApi.Windows.UI.Notifications;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -43,7 +44,9 @@ namespace DesktopProject_V3
                     LeaveAccount.Visibility = Visibility.Collapsed;
                     DeleteProfile.Visibility = Visibility.Collapsed;
                     BalanceBorder.Visibility = Visibility.Collapsed;
-                    ChangeStackPanel.Visibility = Visibility.Visible;
+                    string r = db.Roles.FirstOrDefault(x => x.LoginOfUsers == Initial.OldLogin).NameOfRole;
+                    if (r == "Администратор") ChangeStackPanel.Visibility = Visibility.Visible;
+                    else ChangeStackPanel.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -231,9 +234,8 @@ namespace DesktopProject_V3
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string role = ChangeRoleCombo.SelectedItem.ToString();
-            if(!string.IsNullOrEmpty(role))
-            {
+            
+
                 MessageBoxResult mgr = MessageBox.Show("Вы уверены, что хотите изменить роль?", "Сменить роль?", MessageBoxButton.YesNo);
                 if(mgr == MessageBoxResult.Yes)
                 {
@@ -243,12 +245,18 @@ namespace DesktopProject_V3
                         {
                             if(roles.LoginOfUsers == Initial.login)
                             {
-                                roles.NameOfRole = role;
-                                MessageBox.Show("Роль пользователя изменена");
-                                break;
+                            string role = ChangeRoleCombo.Text;
+                                
+                                if (!string.IsNullOrEmpty(role))
+                                {
+                                    roles.NameOfRole = role;
+                                    roles.LoginOfUsers = Initial.login;
+                                    MessageBox.Show("Роль пользователя изменена");
+                                    break;
+                                }
                             }
                         }
-                    }
+                        db.SaveChanges();
                 }
             }
         }

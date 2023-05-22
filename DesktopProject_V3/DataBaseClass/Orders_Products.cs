@@ -15,10 +15,10 @@ namespace DesktopProject_V3.DataBaseClass
 
         public int? ID_Product { get; set; }
 
+        public int? CountOfProduct { get; set; }
+
         public virtual Orders Orders { get; set; }
 
         public virtual Products Products { get; set; }
-
-        public int? CountOfProduct { get; set; }
     }
 }

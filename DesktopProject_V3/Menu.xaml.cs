@@ -115,7 +115,7 @@ namespace DesktopProject_V3
                     MenuUserList.ItemsSource = UserList;
 
                 string role2 = db.Roles.First(x => x.LoginOfUsers == Initial.login).NameOfRole;
-                if ((role2.Replace(" ", "") == "Администратор"))
+                if ((role2.Replace(" ", "") == "Администратор") || (role2.Replace(" ", "") == "Модератор"))
                 {
                     AddNews.Visibility = Visibility.Visible;
                     UsersTabItem.Visibility = Visibility.Visible;
@@ -391,25 +391,37 @@ namespace DesktopProject_V3
 
         private void BanUserBtn_Click(object sender, RoutedEventArgs e)
         {
-            UserItem ui = (UserItem)MenuUserList.SelectedItem;
-            if (ui.Login != null)
+            using (Model1 db = new Model1())
             {
-                MessageBoxResult result = MessageBox.Show($"Вы уверены, что хотите\nзаблокировать пользователя? {ui.Login}", "Заблокировать пользователя?", MessageBoxButton.YesNo);
-                if(result == MessageBoxResult.Yes)
+                UserItem ui = (UserItem)MenuUserList.SelectedItem;
+                string r = db.Roles.FirstOrDefault(x => x.LoginOfUsers == Initial.login).NameOfRole;
+                if ((ui.Role == "Модератор" || ui.Role == "Администратор") && r != "Администратор")
                 {
-                    using(Model1 db = new Model1())
+                    MessageBox.Show("Нельзя заблокировать модератора/администратора");
+                    return;
+                }
+            if(ui.Role == "Администратор")
+                {
+                    MessageBox.Show("Нельзя заблокировать администратора!");
+                    return;
+                }
+                if (ui.Login != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Вы уверены, что хотите\nзаблокировать пользователя? {ui.Login}", "Заблокировать пользователя?", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.Yes)
                     {
-                        Roles roles = new Roles("Заблокированный", ui.Login);
-                        db.Roles.Add(roles);
-                        db.SaveChanges();
-                        MessageBox.Show($"{ui.Login} был заблокирован");
+                            Roles roles = new Roles("Заблокированный", ui.Login);
+                            db.Roles.Add(roles);
+                            db.SaveChanges();
+                            MessageBox.Show($"{ui.Login} был заблокирован");
+                        
                     }
                 }
-            }
-            else
-            {
-                MessageBox.Show($"Выберите пользователя");
-            }
+                else
+                {
+                    MessageBox.Show($"Выберите пользователя");
+                }
+        }
         }
 
         private void OpenProfileBtn_Click(object sender, RoutedEventArgs e)
@@ -431,7 +443,59 @@ namespace DesktopProject_V3
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            using(Model1 db = new Model1())
+            {
+                if (!string.IsNullOrEmpty(SearchBox.Text))
+                {
 
+
+                    Avatar ava = new Avatar();
+                    UserList = new ObservableCollection<UserItem>();
+                    var users = from t in db.Users
+                                where t.NameOfUser.ToLower().IndexOf(SearchBox.Text.ToLower()) >= 0
+                                select t;
+
+                    foreach (var user in users)
+                    {
+                        if (user != null)
+                        {
+                            try
+                            {
+                                string role = db.Roles.FirstOrDefault(x => x.LoginOfUsers == user.LoginOfUser).NameOfRole ?? null;
+                                UserItem ui = new UserItem(user.LoginOfUser, user.NameOfUser, role, new ImageBrush(ava.ToImage(user.Avatar)));
+                                UserList.Add(ui);
+                            }
+                            catch (System.NullReferenceException ex)
+                            {
+
+                            }
+                        }
+                    }
+                    MenuUserList.ItemsSource = UserList;
+                }
+                else
+                {
+                    Avatar ava = new Avatar();
+                    UserList = new ObservableCollection<UserItem>();
+                    foreach (var user in db.Users)
+                    {
+                        if (user != null)
+                        {
+                            try
+                            {
+                                string role = db.Roles.FirstOrDefault(x => x.LoginOfUsers == user.LoginOfUser).NameOfRole ?? null;
+                                UserItem ui = new UserItem(user.LoginOfUser, user.NameOfUser, role, new ImageBrush(ava.ToImage(user.Avatar)));
+                                UserList.Add(ui);
+                            }
+                            catch (System.NullReferenceException ex)
+                            {
+
+                            }
+                        }
+                    }
+                    MenuUserList.ItemsSource = UserList;
+                }
+            }
         }
     }
 }

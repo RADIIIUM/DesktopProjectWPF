@@ -1068,13 +1068,14 @@
                             </StackPanel.Background>
                             <StackPanel Width="797"
                                         Orientation="Horizontal"
-                                        Background="DarkSlateBlue" Height="41"
+                                        Background="DarkSlateBlue" Height="52"
                                         Margin="20">
                                 <TextBox materialDesign:HintAssist.Hint="Поиск"
                                  x:Name="SearchBox" Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      Foreground="White" Background="#1f0224" Width="235"
                                          Margin="20,0,0,0"
-                                 TextChanged="SearchBox_TextChanged"/>
+                                 TextChanged="SearchBox_TextChanged"
+                                        />
                                 <Button Content="Открыть профиль"
                                                     Margin="20,00,0,0"
                                                     x:Name="OpenProfileBtn"
