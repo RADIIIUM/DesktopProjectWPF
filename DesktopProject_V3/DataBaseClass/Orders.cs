@@ -15,6 +15,15 @@ namespace DesktopProject_V3.DataBaseClass
             Orders_Users = new HashSet<Orders_Users>();
         }
 
+        public Orders(string Status, string typep, string typed, DateTime data, string adress)
+        {
+            this.StatusOfOrder = Status;
+            this.TypeOfPayment = typep;
+            this.TypeOfDelivery = typed;
+            this.DataOrder = data;
+            this.DeliveryAdress = adress;
+        }
+
         [Key]
         public int ID_Order { get; set; }
 

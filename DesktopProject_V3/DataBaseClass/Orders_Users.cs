@@ -8,6 +8,15 @@ namespace DesktopProject_V3.DataBaseClass
 
     public partial class Orders_Users
     {
+        public Orders_Users()
+        {
+
+        }
+        public Orders_Users(string Login, int Order)
+        {
+            this.LoginOfUser = Login;
+            this.ID_Order = Order;
+        }
         [Key]
         public int ID_OU { get; set; }
 

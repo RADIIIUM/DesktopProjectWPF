@@ -353,9 +353,9 @@ namespace DesktopProject_V3
                     }
                     else
                     {
-                        Products prod = db.Products.FirstOrDefault(x => x.ID_Product == Initial.IDProduct);
-                        Initial.Cart.Add(prod);
-                        MessageBox.Show("Товар был добавлен в магазин");
+                        var pr = db.Products.FirstOrDefault(x => x.ID_Product == Initial.IDProduct);
+                        Initial.Cart.Add(pr);
+                        MessageBox.Show("Товар был добавлен в корзину");
                     }
                 }
                 else

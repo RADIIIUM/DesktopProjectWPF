@@ -86,6 +86,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddBalance.xaml.cs">
+      <DependentUpon>AddBalance.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AllNews.xaml.cs">
       <DependentUpon>AllNews.xaml</DependentUpon>
     </Compile>
@@ -123,6 +126,9 @@
     <Compile Include="ReturnPass.xaml.cs">
       <DependentUpon>ReturnPass.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserOrders.xaml.cs">
+      <DependentUpon>UserOrders.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserProfile.xaml.cs">
       <DependentUpon>UserProfile.xaml</DependentUpon>
     </Compile>
@@ -132,6 +138,10 @@
     <Compile Include="WndowOfNew.xaml.cs">
       <DependentUpon>WndowOfNew.xaml</DependentUpon>
     </Compile>
+    <Page Include="AddBalance.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AllNews.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -161,6 +171,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ReturnPass.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserOrders.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

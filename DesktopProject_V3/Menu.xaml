@@ -106,7 +106,8 @@
                                Foreground="#c377fc"
                                Height="30"
                                FontSize="20"
-                               Margin="10,10,5,0">
+                               Margin="10,10,5,0"
+                                MouseLeftButtonDown="AddMoney_MouseLeftButtonDown">
                                 <Run x:Name="BalanceUser"
                                     Text="2 000 000 000"/>
                                 <Run Text=" руб"/>
@@ -116,22 +117,7 @@
                     </Border>
                 </StackPanel>
             </Border>
-            <Button
-             Margin="0,0,20,0"
-             Background="Transparent"
-  HorizontalAlignment="Right"
-  IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
-  Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-  ToolTip="MaterialDesignFloatingActionMiniButton">
-                <materialDesign:PackIcon
-                x:Name="BellNotif"
-                Width="30"
-                Height="30"
-                Kind="Bell"
-                Foreground="#704391"  />
 
-
-            </Button >
 
         </DockPanel>
 
@@ -905,7 +891,7 @@
                                                Margin="5">
                                         <Run Text="Общее число заказов:"
                                              BaselineAlignment="Center"/>
-                                        <Run Text="2000"
+                                        <Run Text="0"
                                              x:Name="AllOrdersText"
                                              BaselineAlignment="Center"/>
                                          <Run Text=" шт."
@@ -916,6 +902,12 @@
                                             x:Name="OpenOrder"
                                             Margin="40,0,0,0"
                                             Click="OpenOrder_Click"/>
+
+                                    <Button Content="Скрыть заказ"
+                                            x:Name="HideOrder"
+                                            Margin="40,0,0,0"
+                                            Click="HideOrder_Click"/>
+                                    
                                     <Button Content="Отменить заказ"
                                             x:Name="DeleteOrder"
                                             Margin="40,0,0,0"
@@ -923,7 +915,8 @@
                                 </StackPanel>
                                 <ListBox Height="158"
                                          x:Name="ListOrders"
-                                         SelectionChanged="ListOrders_SelectionChanged">
+                                         Background="RoyalBlue"
+                                         Foreground="White">
                                     
                                 </ListBox>
                             </StackPanel>
@@ -942,7 +935,7 @@
                                                              Height="40"/>
                                    <Run Text="Общая сумма:" BaselineAlignment="Center"/>
                                     
-                                    <Run Text="2000"
+                                    <Run Text="0"
                                          x:Name="AllSum"
                                          BaselineAlignment="Center"/>
                                 </TextBlock>
@@ -956,14 +949,15 @@
                                                              Height="40"/>
                                     <Run Text="Кол-во товаров:"
                                          BaselineAlignment="Center"/>
-                                    <Run Text="2000"
+                                    <Run Text="0"
                                          x:Name="AllProducts"
                                          BaselineAlignment="Center"/>
                                 </TextBlock>
                                 </StackPanel>
 
                                 <StackPanel Width="327"
-                                            Margin="10,10,0,10">
+                                            Margin="10,10,0,10"
+                                             VerticalAlignment="Center">
                                     <TextBlock Text="Адрес доставки_____"
                                                FontSize="14"
                                                Foreground="White"
@@ -974,21 +968,13 @@
                                         Margin="5"
                                         Foreground="White"
                                         x:Name="AddressUser"
-                                        materialDesign:HintAssist.Hint="Адрес"/>
-                                    <TextBlock Text="Способ оплаты_____"
-                                               FontSize="14"
-                                               Foreground="White"
-                                               FontWeight="Bold"
-                                               TextDecorations="Underline"/>
-                                    <ComboBox Foreground="White"
-                                              x:Name="PaymentMethod">
-                                        <ComboBoxItem>Банковская карта</ComboBoxItem>
-                                        <ComboBoxItem>Наличными</ComboBoxItem>
-                                        <ComboBoxItem>Кредит/Рассрочка</ComboBoxItem>
-                                    </ComboBox>
+                                        materialDesign:HintAssist.Hint="Адрес"
+                                        VerticalAlignment="Center"/>
+
                                 </StackPanel>
                                 <StackPanel Width="280"
-                                            Margin="10,10,0,10">
+                                            Margin="10,10,0,10"
+                                            x:Name="ButtonCartStack">
                                     <Button Content="Оформить заказ" Height="26"
                                             FontSize="15" FontStyle="Italic"
                                             x:Name="NewOrderBtn"
@@ -1001,7 +987,8 @@
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel>
-                                <ListBox Height="272" x:Name="ListOfProducts" >
+                                <ListBox Height="272" x:Name="ListOfProducts"
+                                         >
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Height="90"
@@ -1080,6 +1067,10 @@
                                                     Margin="20,00,0,0"
                                                     x:Name="OpenProfileBtn"
                                                             Click="OpenProfileBtn_Click"/>
+                                <Button Content="Открыть заказы"
+                                                    Margin="20,00,0,0"
+                                                    x:Name="OpenUserOrder"
+                                                            Click="OpenUserOrder_Click"/>
                                 <Button Content="Заблокировать"
                                                     Margin="20,0,0,0"
                                                     Background="Red"

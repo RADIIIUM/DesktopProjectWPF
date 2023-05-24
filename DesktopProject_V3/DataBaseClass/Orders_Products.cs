@@ -8,6 +8,16 @@ namespace DesktopProject_V3.DataBaseClass
 
     public partial class Orders_Products
     {
+        public Orders_Products()
+        {
+
+        }
+        public Orders_Products(int ido, int idp, int count)
+        {
+            this.ID_Order = ido;
+            this.ID_Product = idp;
+            this.CountOfProduct = count; 
+        }
         [Key]
         public int ID_OP { get; set; }
 

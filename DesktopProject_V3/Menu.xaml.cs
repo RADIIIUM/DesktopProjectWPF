@@ -1,4 +1,5 @@
 ﻿using DesktopProject_V3.DataBaseClass;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -52,9 +53,6 @@ namespace DesktopProject_V3
             this.avatar = avatar;
             this.Price = price;
             this.AdressDelivery = adress;
-
-
-
         }
 
         public string Name { get; set; }
@@ -81,20 +79,65 @@ namespace DesktopProject_V3
             {
                 try
                 {
-                    var orders = db.Orders_Users.Where(x => x.LoginOfUser == Initial.login).Select(x => x.ID_Order).ToList();
-                    var orders2 = db.Orders.Where(x => orders.FindAll(t => t == x.ID_Order) != null).ToList();
-                    var orders_product = db.Orders_Products.Where(x => orders.FindAll(t => t == x.ID_Order) != null).ToList();
-                    var productsInOrder = db.Products.Where(x => orders_product.FindAll(t => t.ID_Product == x.ID_Product) != null).ToList();
-                    foreach(var p in orders2)
+                    foreach(var o in db.Orders_Users)
                     {
-                      ListOrders.Items.Add($"{p.ID_Order} - {p.DataOrder} - {p.TypeOfDelivery} - {p.TypeOfPayment}");
-                    }  
+                        if(o.LoginOfUser == Initial.login)
+                        {
+                            foreach (var or in db.Orders)
+                            {
+                                if (o.ID_Order == or.ID_Order )
+                                {
+                                    ListOrders.Items.Add($"{or.ID_Order} | {or.DataOrder.Date} | {or.TypeOfDelivery} | {or.StatusOfOrder}");
+                                }
+                            }
+                        }
+                    }
+                    AllOrdersText.Text = ListOrders.Items.Count.ToString();
+
                 }
 
                 catch
                 {
 
                 }
+
+                try
+                {
+                    ObservableCollection<ProductItem> newList = new ObservableCollection<ProductItem>();
+                    List<Products> lp = Initial.Cart;
+                    AddressUser.Text = db.Users.FirstOrDefault(x => x.LoginOfUser == Initial.login).AddressOfUser ?? null;
+                    foreach (var item in lp)
+                    {
+                        int count = lp.Where(x => x.ID_Product == item.ID_Product).Count();
+                        ProductItem newp = new ProductItem(item.NameOfProduct, lp.Where(x => x.ID_Product == item.ID_Product).Count(),
+                                        new ImageBrush(ava.ToImage(item.AvatarOfProduct)), item.Price * count, AddressUser.Text);
+                        if (newList.Where(x => x.Name == item.NameOfProduct).Count() >= 1)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            newList.Add(newp);
+                        }
+                    }
+
+                    if (newList != null)
+                    {
+                        ListOfProducts.ItemsSource = newList;
+                        foreach (var i in newList)
+                        {
+                            AllSum.Text = $"{(int.Parse(AllSum.Text) + i.Price)}";
+                        }
+                        AllProducts.Text = newList.Count().ToString();
+                    }
+                    else MessageBox.Show("Не удалось восстановить старый заказ");
+                }
+                catch
+                {
+
+                }
+
+
                 UserList = new ObservableCollection<UserItem>();
                 foreach (var user in db.Users)
                     {
@@ -255,6 +298,9 @@ namespace DesktopProject_V3
             up.ShowDialog();
         }
 
+        //==============================================
+        // Методы для работы с Новостями 
+        //==============================================
         private void AddNews_Click(object sender, RoutedEventArgs e)
         {
             WndowOfNew wn = new WndowOfNew();
@@ -316,6 +362,10 @@ namespace DesktopProject_V3
             }
         }
 
+        //==============================================
+        // Методы для работы с Магазином 
+        //==============================================
+
         private void Details_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             TextBlock tx = (TextBlock)sender;
@@ -325,70 +375,11 @@ namespace DesktopProject_V3
             wp.ShowDialog();
         }
 
-        private void ListOrders_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                using (Model1 db = new Model1())
-                {
-                string item = ListOrders.SelectedItem.ToString();
-                string id = item.Split('-')[0];
-                Orders or = db.Orders.FirstOrDefault(x => x.ID_Order == int.Parse(id));
-                    AddressUser.Text = or.DeliveryAdress;
-                    PaymentMethod.SelectedIndex = (PaymentMethod.Items.IndexOf(or.TypeOfPayment));
-                    var products = db.Products.Where(x =>(db.Orders_Products.Where(y => y.ID_Order == int.Parse(id))) != null).ToList();
-                    foreach(var pr in products)
-                    {
-                        Avatar avat = new Avatar();
-                        int countOfProduct = db.Orders_Products.FirstOrDefault(x => x.ID_Product == pr.ID_Product).CountOfProduct ?? 0;
-                        Orders ord = db.Orders.FirstOrDefault(x => x.ID_Order == int.Parse(id));
-                        ProductItem p = new ProductItem(pr.NameOfProduct, countOfProduct, new ImageBrush(avat.ToImage(pr.AvatarOfProduct)),pr.Price*countOfProduct,ord.DeliveryAdress);
-                        ProductsList.Add(p);
-                    }
-                    ListOfProducts.ItemsSource = ProductsList;
-                }
-            }
-            catch
-            {
 
-            }
-        }
 
-        private void DeleteProduct_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void NewOrderBtn_Click(object sender, RoutedEventArgs e)
-        {
-            using(Model1 db = new Model1())
-            {
-                if(ListOfProducts.Items.Count <= 0)
-                {
-                    MessageBox.Show(" Нельзя оформить пустой заказ ");
-                }
-                if (string.IsNullOrEmpty(AddressUser.Text) || 
-                    string.IsNullOrEmpty(PaymentMethod.SelectedItem.ToString()) && ListOfProducts.Items.Count > 0)
-                {
-                    MessageBox.Show(" Строки адреса и выбор метода оплаты не должны быть пустыми ");
-                }
-                else
-                {
-                    Orders ord = new Orders();
-                }
-            }
-        }
-
-        private void OpenOrder_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void DeleteOrder_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+        //==============================================
+        // Методы для работы с Юзерами 
+        //==============================================
         private void BanUserBtn_Click(object sender, RoutedEventArgs e)
         {
             using (Model1 db = new Model1())
@@ -441,6 +432,21 @@ namespace DesktopProject_V3
             }
         }
 
+        private void OpenUserOrder_Click(object sender, RoutedEventArgs e)
+        {
+            UserItem ui = (UserItem)MenuUserList.SelectedItem;
+            if (ui.Login != null)
+            {
+                Initial.OldLogin = Initial.login;
+                Initial.login = ui.Login;
+                UserOrders up = new UserOrders();
+                up.Show();
+            }
+            else
+            {
+                MessageBox.Show($"Выберите пользователя");
+            }
+        }
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             using(Model1 db = new Model1())
@@ -496,6 +502,226 @@ namespace DesktopProject_V3
                     MenuUserList.ItemsSource = UserList;
                 }
             }
+        }
+
+        //==============================================
+        // Методы для работы с Корзиной 
+        //==============================================
+        private void HideOrder_Click(object sender, RoutedEventArgs e)
+        {
+            using (Model1 db = new Model1())
+            {
+                ButtonCartStack.Visibility = Visibility.Visible;
+                Avatar ava = new Avatar();
+                ObservableCollection<ProductItem> newList = new ObservableCollection<ProductItem>();
+                List<Products> lp = Initial.Cart;
+                AddressUser.Text = db.Users.FirstOrDefault(x => x.LoginOfUser == Initial.login).AddressOfUser ?? null;
+                foreach (var item in lp)
+                {
+                    int count = lp.Where(x => x.ID_Product == item.ID_Product).Count();
+                    ProductItem newp = new ProductItem(item.NameOfProduct, lp.Where(x => x.ID_Product == item.ID_Product).Count(),
+                                    new ImageBrush(ava.ToImage(item.AvatarOfProduct)), item.Price * count, AddressUser.Text);
+                    newList.Add(newp);
+                }
+
+                if (newList != null)
+                {
+                    ListOfProducts.ItemsSource = newList;
+                    foreach (var i in newList)
+                    {
+                        AllSum.Text = $"{(int.Parse(AllSum.Text) + i.Price)}";
+                        AllProducts.Text = $"{int.Parse(AllProducts.Text) + newList.Count}";
+                    }
+                }
+                else MessageBox.Show("Не удалось восстановить старый заказ");
+            }
+        }
+        private void OpenOrder_Click(object sender, RoutedEventArgs e)
+        {
+            AllSum.Text = "0";
+            AllProducts.Text = "0";
+                using (Model1 db = new Model1())
+                {
+                    int ido = int.Parse(ListOrders.SelectedItem.ToString().Split('|')[0].Replace(" ", ""));
+                    int id = db.Orders.FirstOrDefault(x => x.ID_Order == ido).ID_Order;
+                    ObservableCollection<ProductItem> newList = FillListProduct(id);
+                    if (newList != null)
+                    {
+                        ListOfProducts.ItemsSource = newList;
+                        foreach(var i in newList)
+                        {
+                            AllSum.Text = $"{(int.Parse(AllSum.Text) + i.Price)}";
+                            AllProducts.Text = $"{int.Parse(AllProducts.Text) + newList.Count}";
+                        }
+                        ButtonCartStack.Visibility = Visibility.Collapsed;
+                    }
+                    else MessageBox.Show("Не удалось открыть заказ");
+                }
+        }
+
+        public ObservableCollection<ProductItem> FillListProduct(int idorder)
+        {
+            using (Model1 db = new Model1())
+            {
+                Avatar ava = new Avatar();
+                ObservableCollection<ProductItem> newList = new ObservableCollection<ProductItem>();
+                foreach (var item in db.Orders_Products)
+                {
+                    if (idorder == item.ID_Order)
+                    {
+                        foreach (var item2 in db.Products)
+                        {
+                            if(item2.ID_Product == item.ID_Product)
+                            {
+                                int count = db.Orders_Products.Where(x => x.ID_Product == item2.ID_Product && idorder == item.ID_Order).Count();
+                                string adress = db.Orders.FirstOrDefault(x => x.ID_Order == idorder).DeliveryAdress;
+                                ProductItem newp = new ProductItem(item2.NameOfProduct, count,
+                                    new ImageBrush(ava.ToImage(item2.AvatarOfProduct)), item2.Price * count, adress);
+                                if (newList.Where(x => x.Name == item2.NameOfProduct).Count() >= 1)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    newList.Add(newp);
+                                }
+                            }
+                        }
+                    }
+                }
+                return newList;
+            }
+        }
+
+        private void DeleteOrder_Click(object sender, RoutedEventArgs e)
+        {
+                using(Model1 db = new Model1())
+                {
+
+            
+                    int? ido = int.Parse(ListOrders.SelectedItem.ToString().Split('|')[0].Replace(" ", "") ?? null);
+                    int id = db.Orders.FirstOrDefault(x => x.ID_Order == ido).ID_Order;
+
+                    if(id != null)
+                    {
+
+                        Orders ord = db.Orders.FirstOrDefault(x => x.ID_Order == id);
+                        ord.StatusOfOrder = "Отменен пользователем";
+                        db.SaveChanges();
+                        MessageBox.Show("Заказ был отменен");
+                }
+            }
+        }
+
+        private void DeleteProduct_Click(object sender, RoutedEventArgs e)
+        {
+            using(Model1 db = new Model1())
+            {
+                try
+                {
+                    ProductItem item = (ProductItem)ListOfProducts.SelectedItem;
+                    foreach(var pr in Initial.Cart)
+                    {
+                        if(pr.NameOfProduct == item.Name)
+                        {
+                            Initial.Cart.Remove(pr); 
+                            break;
+                        }
+                    }
+                    try
+                    {
+                        Avatar ava = new Avatar();
+                        ObservableCollection<ProductItem> newList = new ObservableCollection<ProductItem>();
+                        List<Products> lp = Initial.Cart;
+                        AddressUser.Text = db.Users.FirstOrDefault(x => x.LoginOfUser == Initial.login).AddressOfUser ?? null;
+                        foreach (var i in lp)
+                        {
+                            int count = lp.Where(x => x.ID_Product == i.ID_Product).Count();
+                            ProductItem newp = new ProductItem(i.NameOfProduct, lp.Where(x => x.ID_Product == i.ID_Product).Count(),
+                                            new ImageBrush(ava.ToImage(i.AvatarOfProduct)), i.Price * count, AddressUser.Text);
+                            if (newList.Where(x => x.Name == i.NameOfProduct).Count() >= 1)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                newList.Add(newp);
+                            }
+                        }
+
+                        if (newList != null)
+                        {
+                            ListOfProducts.ItemsSource = newList;
+                            foreach (var i in newList)
+                            {
+                                AllSum.Text = $"{(int.Parse(AllSum.Text) + i.Price)}";
+                            }
+                            AllProducts.Text = newList.Count().ToString();
+                        }
+                        else MessageBox.Show("Не удалось восстановить старый заказ");
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Вы не выбрали товар для удаления");
+                }
+
+            }
+        }
+
+        private void NewOrderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            using (Model1 db = new Model1())
+            {
+                if (ListOfProducts.Items.Count <= 0)
+                {
+                    MessageBox.Show(" Нельзя оформить пустой заказ ");
+                }
+                if (string.IsNullOrEmpty(AddressUser.Text) && ListOfProducts.Items.Count > 0)
+                {
+                    MessageBox.Show(" Строки адреса и выбор метода оплаты не должны быть пустыми ");
+                }
+                else
+                {
+                    if (int.Parse(BalanceUser.Text) < int.Parse(AllSum.Text))
+                    {
+                        MessageBox.Show("На вашем кошельке недостаточно средств");
+                        return;
+                    }
+
+                    Orders ord = new Orders("В доставке", "Электронный кошелек", "Доставка по адресу", DateTime.Today.Date, AddressUser.Text);
+                    Orders_Users ou = new Orders_Users(Initial.login, ord.ID_Order);
+                    foreach(var pr in Initial.Cart)
+                    {
+                        int count = Initial.Cart.Select(x => x.NameOfProduct == pr.NameOfProduct).Count();
+                        Orders_Products op = new Orders_Products(ord.ID_Order, pr.ID_Product, count);
+                        db.Orders_Products.Add(op);
+                    }
+                    foreach(var user in db.Users)
+                    {
+                        if(user.LoginOfUser == Initial.login)
+                        {
+                            user.Balance = -user.Balance - int.Parse(AllSum.Text);
+                        }
+                    }
+                    db.Orders.Add(ord);
+                    db.Orders_Users.Add(ou);
+                    db.SaveChanges();
+
+                    MessageBox.Show("Заказ был добавлен");
+                    Initial.Cart = new List<Products>();
+                }
+            }
+        }
+
+        private void AddMoney_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AddBalance ab = new AddBalance();
+            ab.Show();
         }
     }
 }

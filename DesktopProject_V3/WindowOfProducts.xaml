@@ -134,9 +134,9 @@
                     <BeginStoryboard>
                         <Storyboard >
                             <DoubleAnimation Storyboard.TargetName="Emblema" Storyboard.TargetProperty="Width"
-                                                 From="60" To="100"/>
+                                                 From="60" To="70"/>
                             <DoubleAnimation Storyboard.TargetName="Emblema" Storyboard.TargetProperty="Height"
-                                                 From="60" To="100"/>
+                                                 From="60" To="70"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
@@ -144,9 +144,9 @@
                     <BeginStoryboard>
                         <Storyboard >
                             <DoubleAnimation Storyboard.TargetName="Emblema" Storyboard.TargetProperty="Width"
-                                                 From="100" To="60"/>
+                                                 From="70" To="60"/>
                             <DoubleAnimation Storyboard.TargetName="Emblema" Storyboard.TargetProperty="Height"
-                                                 From="100" To="60"/>
+                                                 From="70" To="60"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>

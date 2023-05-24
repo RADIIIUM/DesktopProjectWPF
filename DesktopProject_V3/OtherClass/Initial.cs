@@ -10,7 +10,7 @@ namespace DesktopProject_V3
 {
     partial class Initial
     {
-        public static List<Products> Cart { get; set; }
+        public static List<Products> Cart { get; set; } = new List<Products>();
         public static string login { get; set; }
 
         public static string OldLogin { get; set; }
